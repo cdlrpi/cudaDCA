@@ -34,3 +34,10 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+
+#temporary files
+*~
+
+#ipython notebook checkpoints?
+*checkpoint.ipynb
+*__pycache__
