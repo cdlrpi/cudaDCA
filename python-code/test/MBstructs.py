@@ -23,45 +23,45 @@ class Body:
 	
 		self.I0T=np.transpose(self.I0)
 	def shifters(self):
-		self.S12=np.zeros((6,6))
+		self.S01=np.zeros((6,6))
 		self.S10=np.zeros((6,6))
 		self.S20=np.zeros((6,6))
-		self.S21=np.zeros((6,6))
+		self.S02=np.zeros((6,6))
 
-		self.S12[:3,:3]=np.identity(3)
-		self.S12[3:,3:]=np.identity(3)
+		self.S02[:3,:3]=np.identity(3)
+		self.S02[3:,3:]=np.identity(3)
 		self.S10[:3,:3]=np.identity(3)
 		self.S10[3:,3:]=np.identity(3)
 		self.S20[:3,:3]=np.identity(3)
 		self.S20[3:,3:]=np.identity(3)
-		self.S21[:3,:3]=np.identity(3)
-		self.S21[3:,3:]=np.identity(3)
-		self.S12[:3,3:]=MBF.skew(self.r12)
+		self.S01[:3,:3]=np.identity(3)
+		self.S01[3:,3:]=np.identity(3)
+		self.S02[:3,3:]=MBF.skew(self.r02)
 		self.S10[:3,3:]=MBF.skew(self.r10)
-		self.S21[:3,3:]=MBF.skew(self.r21)	
+		self.S01[:3,3:]=MBF.skew(self.r01)	
 		self.S20[:3,3:]=MBF.skew(self.r20)
 
 	def Mmatrix(self):
 		self.M=np.zeros((6,6))
 		self.M[0:3,0:3]=self.I0
-		self.M[3:,:3]=np.identity(3)
-		self.M[:3,3:]=np.identity(3) #this is how i've been forcing it to be invertible
 		self.M[3:,3:]=np.array(((self.m,0,0),(0,self.m,0),(0,0,self.m)))
 	
 		self.Minv=np.zeros((6,6))
 		self.Minv=np.linalg.inv(self.M)
 	def rs(self,r,v):
 		self.r10= np.dot(r*v,self.C0)
+		self.r01=-1*self.r10
 		self.r12= np.dot(self.l*v,self.C0)
 		self.r21=-1*self.r12
 		self.r20= np.dot((self.l-r)*v*-1,self.C0) 
+		self.r02=-1*self.r20
 	def zs(self):
-		self.z11=self.Minv
-		self.z12=np.dot(self.Minv,self.S12)
-		self.z13=np.dot(self.Minv,np.dot(self.S10,self.Fa))
-		self.z21=np.dot(self.Minv,self.S21)
-		self.z22=self.Minv
-		self.z23=np.dot(self.Minv,np.dot(self.S20,self.Fa))
+		self.z11=np.dot(self.S10,np.dot(self.Minv,self.S01))
+		self.z12=np.dot(self.S10,np.dot(self.Minv,self.S02))
+		self.z13=np.dot(self.S10,np.dot(self.Minv,self.Fa))
+		self.z21=np.dot(self.S20,np.dot(self.Minv,self.S01))
+		self.z22=np.dot(self.S20,np.dot(self.Minv,self.S02))
+		self.z23=np.dot(self.S20,np.dot(self.Minv,self.Fa))
 	
 	def gravity(self,v):
 		self.Fa=np.zeros((6))
