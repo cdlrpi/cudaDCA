@@ -72,34 +72,36 @@ class Body:
 	def zs(self):
 		self.z11=np.dot(self.S10,np.dot(self.Minv,self.S01))
 		self.z12=np.dot(self.S10,np.dot(self.Minv,self.S02))
-		self.z13=np.dot(self.S10,np.dot(self.Minv,self.Fa))
+		self.z13=np.dot(np.dot(self.S10,self.Minv),self.Fa1)
 		self.z21=np.dot(self.S20,np.dot(self.Minv,self.S01))
 		self.z22=np.dot(self.S20,np.dot(self.Minv,self.S02))
-		self.z23=np.dot(self.S20,np.dot(self.Minv,self.Fa))
+		self.z23=np.dot(self.S20,np.dot(self.Minv,self.Fa2))
 	
 	#Function to apply the state dependant forces
 	#I think this is where my problem is because I am 
 	#not sure if this is correct.
 	def Forces(self,v):
 
-		self.Fa=np.zeros((6))
+		self.Fa1=np.zeros((6))
+		self.Fa2=np.zeros((6))
 
 		#Force from centripedal motion around the
 		#body's first joint
-		self.i1= np.cross(self.w1,self.r10)
-		self.i2=np.cross(self.w1,self.i1)
-		self.i3=self.m*self.i2
+		self.i1= np.cross(self.w,self.r10)
+		self.i12=np.cross(self.w,self.r20)
+		self.i2=np.cross(self.w,self.i1)
+		self.i31=self.m*self.i2
+		self.i32=self.m*np.cross(self.w,self.i12)
 		
-		#Force due to the overall motion of the body
-		self.i5=np.cross(self.w,self.m*self.Vcm)
 		
 		#Total force with gravity included
-		self.Fa[3:]=9.81*self.m*v-self.i3-self.i5
+		self.Fa1[3:]=9.81*self.m*v-self.i31#-self.i5
+		self.Fa2[3:]=9.81*self.m*v-self.i32
 
 #Joint is the class that defines a single joint in a multibody system		
 class Joint:
 
-	#Function to create the P and D matrices
+	#Function to create the P and D matrices+++
 	def PDmatrix(self,v,x):
 		self.P=np.zeros((6,x))
 		self.D=np.zeros((6,6-x))
