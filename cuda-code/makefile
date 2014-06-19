@@ -4,7 +4,7 @@
 NVCC = /usr/local/cuda-5.5/bin/nvcc
 
 # here are all the objects 
-OBJS = cudaDCAdriver.o h_code/Disassemble_setup.o h_code/Init_setup.o h_code/Assemble_setup.o h_code/solveBCs.o h_code/cudaDCA.o
+OBJS = cudaDCAdriver.o h_code/Disassemble_setup.o h_code/Init_setup.o h_code/Assemble_setup.o h_code/solveBCs.o h_code/cudaDCA.o h_code/RK45.o
 
 #rule to change .cu into .o
 .cu.o:
@@ -23,11 +23,11 @@ h_code/Disassemble_setup.o: h_code/classes.h
 h_code/Init_setup.o: h_code/classes.h
 h_code/solveBCs.o: h_code/classes.h
 h_code/cudaDCA.o: h_code/classes.h
-
+h_code/RK45.o: h_code/classes.h
 
 #RK45.o: classes.h
 #clean command to remove all temporary and unnecessary files
 clean:
-	rm -f *.o *~ h_code/*~ h_code/*.o d_code/*~ d_code/*.o go  core
+	rm -f *.o *~ h_code/*~ h_code/*.o d_code/*~ d_code/*.o go *.txt core
 
 

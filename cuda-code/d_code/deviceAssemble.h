@@ -51,11 +51,11 @@ __global__ void Assemble(float oldZs[],float newZs[],float Xinvs[], int nn)
     	//index to write Xinverse
 	//Xinverse is needed in disassembly, so it is saved
     	const int wXinv = col+row*(nn)*5+i1*5;//only write if col !=5 and row !=5
-   
+   		__syncthreads();
        	//z11 of body 2 and z22 of body 1 are obtained to construct X
     	z1[row][col]=oldZs[r211];
     	z2[row][col]=oldZs[r122];
-    	syncthreads();//To ensure matrices are done loading
+    	__syncthreads();//To ensure matrices are done loading
 
     	get_X_pend(z1,z2,A,row,col);//Get the X matrix and put it in A
     	invert_X(A,z1,row,col);//Invert X and put it in A
@@ -69,38 +69,38 @@ __global__ void Assemble(float oldZs[],float newZs[],float Xinvs[], int nn)
 	//zeta valuess except z13 and z23
     	z1[row][col]=oldZs[r112];//z12 for body 1
     	z2[row][col]=oldZs[r212];//z12 for body 2
-    	syncthreads();//To ensure matrices are done loading
+    	__syncthreads();//To ensure matrices are done loading
 
     	Mat66Mult(A,z2,z2,row,col);
     	Mat66Mult(z1,z2,z2,row,col);//z2 now holds the new z12
     	newZs[i12]=z2[row][col];//Save the new z12
     
     	z2[row][col]=oldZs[r121];//z21 for body 1
-    	syncthreads();//To ensure the matrix is done loading
+    	__syncthreads();//To ensure the matrix is done loading
 
     	Mat66Mult(A,z2,z2,row,col);
     	Mat66Mult(z1,z2,z2,row,col);
     	z1[row][col]=oldZs[r111];//z1 now holds z11 for body 1
-    	syncthreads();//To ensure the matrix is done loading
+    	__syncthreads();//To ensure the matrix is done loading
 
     	z2[row][col]=z1[row][col]-z2[row][col];//z2 now holds the new z11
     	newZs[i11]=z2[row][col];//Save the new z11
 	
 	z1[row][col]=oldZs[r221];//z21 for body 2
 	z2[row][col]=oldZs[r121];//z21 for body 1
-    	syncthreads();//To ensure matrices are done loading
+    	__syncthreads();//To ensure matrices are done loading
 
 	Mat66Mult(A,z2,z2,row,col);
 	Mat66Mult(z1,z2,z2,row,col);//z2 now holds the new z21
 	newZs[i21]=z2[row][col];//Save the new z21
 
 	z2[row][col]=oldZs[r212];//z12 for body 2
-    	syncthreads();//To ensure the matrix is done loading
+    	__syncthreads();//To ensure the matrix is done loading
 
 	Mat66Mult(A,z2,z2,row,col);
 	Mat66Mult(z1,z2,z2,row,col);
 	z1[row][col]=oldZs[r222];//z22 for body 2
-    	syncthreads();//To ensure the matrix is done loading
+    	__syncthreads();//To ensure the matrix is done loading
 
 	z2[row][col]=z1[row][col]-z2[row][col];//z2 now holds the new z22
 	newZs[i22]=z2[row][col];//Save the new z22
@@ -111,7 +111,7 @@ __global__ void Assemble(float oldZs[],float newZs[],float Xinvs[], int nn)
 		z1[row][col]=oldZs[r123];//z23 for body 1
 		z2[row][col]=oldZs[r213];//z13 for body 2
 	}
-    	syncthreads();//To ensure the matrices are done loading
+    	__syncthreads();//To ensure the matrices are done loading
 
     	z1[row][col]=z1[row][col]-z2[row][col];
 	Mat61Mult(A,z1,A,row,col);//col = 0 of A now holds Y
@@ -121,7 +121,7 @@ __global__ void Assemble(float oldZs[],float newZs[],float Xinvs[], int nn)
 	{
 		z1[row][col]=oldZs[r113];//z13 for body 1
 	}
-    	syncthreads();//To ensure the matrix is done loading
+    	__syncthreads();//To ensure the matrix is done loading
 
 	Mat61Mult(z2,A,z2,row,col);
 	z1[row][col]=z1[row][col]-z2[row][col];//z1 now holds the new z13
@@ -135,7 +135,7 @@ __global__ void Assemble(float oldZs[],float newZs[],float Xinvs[], int nn)
 	{
 		z1[row][col]=oldZs[r223];//z23 for body 2
 	}
-    	syncthreads();//To ensure the matrices are done loading
+    	__syncthreads();//To ensure the matrices are done loading
 
 	Mat61Mult(z2,A,z2,row,col);
 	z1[row][col]=z1[row][col]+z2[row][col];//z1 now holds the new z23

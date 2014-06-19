@@ -26,7 +26,7 @@ void matmult61(float A[6][6], float B[6], float C[6])
 	for(int r = 0; r<6; r++)
 	{
 		j=0;
-		for(int c = 0; r<6; r++)
+		for(int c = 0; c<6; c++)
 		{
 			j+= (A[r][c]*B[c]);
 		}
@@ -116,6 +116,7 @@ void set_up(float A[], float B[], float C[], int n , float h)
 	while (i<n)
 	{
 		C[i]=A[i]+(h*B[i]);
+		i++;
 	}
 }
 
@@ -126,6 +127,7 @@ void get_final_q(float x[], float h, float a[], float b[], float c[], float d[],
 	while(i<n)
 	{
 		R[i]= x[i] + ((h/3.0)*(a[i]+(2*b[i])+(2*c[i])+d[i]));
+		i++;
 	}
 }
 
@@ -136,6 +138,7 @@ void get_final_qdot(float x[], float h, float a[], float b[], float c[], float d
 	while(i<n)
 	{
 		R[i+n]= x[i] + ((h/3.0)*(a[i]+(2*b[i])+(2*c[i])+d[i]));
+		i++;
 	}
 }
 

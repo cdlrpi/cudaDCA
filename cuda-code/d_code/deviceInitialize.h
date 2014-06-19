@@ -2,65 +2,68 @@
 #include <stdio.h>
 __global__ void Initialize(float state[],float m[], float l[],float I[],float Zetas[],int n)
 {
-    	//Variable Declarations
-		const int i1 = blockIdx.x;
-		const int row = threadIdx.y;
-		const int col = threadIdx.x;
-    	const int Iindex = blockIdx.x*3+row*3*n+col;
-    	const int i11 = col+row*26*n+i1*26;
-    	const int i12=i11+6;
-    	const int i13=i12+6; //only col=0 can write
-    	const int i21=i13+1;
-    	const int i22=i21+6;
-    	const int i23=i22+6; //only col = 0 can write
-    	__shared__ float z[6][6];
-    	__shared__ float Minv[6][6];
-    	__shared__ float S[6][6];
-    	__shared__ float r[3];
-    	__shared__ float q;
-    	__shared__ float w;
-    	//////////////////q and w//////////////////////////////////////
-    	//To get q and w, either this:
-
-    	int i = 0;
-    	while (i <= i1)
-    	{
-        	q+=state[i];
-        	w+=state[i+n];
-        	i++;
-    	}
+    //Variable Declarations
+	const int i1 = blockIdx.x;
+	const int row = threadIdx.y;
+	const int col = threadIdx.x;
+    const int Iindex = blockIdx.x*3+row*3*n+col;
+    const int i11 = col+row*26*n+i1*26;
+    const int i12=i11+6;
+    const int i13=i12+6; //only col=0 can write
+    const int i21=i13+1;
+    const int i22=i21+6;
+    const int i23=i22+6; //only col = 0 can write
+    __shared__ float z[6][6];
+    __shared__ float Minv[6][6];
+    __shared__ float S[6][6];
+    __shared__ float r[3];
+    __shared__ float q;
+    __shared__ float w;
+    //////////////////q and w//////////////////////////////////////
+    //To get q and w, either this:
+		__syncthreads();
+    int i = 0;
+    while (i <= i1)
+    {
+        q+=state[i];
+        w+=state[i+n];
+        i++;
+    }
+	__syncthreads();
    
-    	/*
-    	//or this, but only if less than 36 bodies:
+    /*
+    //or this, but only if less than 36 bodies:
 
-    	__shared__ float lcl_state[2*n];
-    	if (index < 2*n)
-    	{
-        	lcl_state[index]=state[index];
-    	}
-    	*/
-    	//then add them up to get the right number
+    __shared__ float lcl_state[2*n];
+    if (index < 2*n)
+    {
+        lcl_state[index]=state[index];
+    }
+    */
+    //then add them up to get the right number
 
-  ////////////////Inverse Mass Matrix and shifter setup//////////////////////////////////
-    	MSsetup(Minv,S,row,col,m[i1],I,Iindex,i1);
+    ////////////////Inverse Mass Matrix and shifter setup//////////////////////////////////
+    MSsetup(Minv,S,row,col,m[i1],I,Iindex,i1);
     
     
     
-    	////////////////////DCM/////////////////////////////////////////
-    	//Dont need a dcm because it is planar, so for now to avoid memory 
-    	//usage, Im not using it.
-    	//DCM(q,C)
+    ////////////////////DCM/////////////////////////////////////////
+    //Dont need a dcm because it is planar, so for now to avoid memory 
+    //usage, Im not using it.
+    //DCM(q,C)
     
-    	///////////////////z11/////////////////////////////////////////
-    	z[row][col]=0;
-    	r01(r,q,l[i1]);
- 
-    	zaa(r,z,Minv,S,row,col);
-    
-    	Zetas[i11]=z[row][col];
-    	//////////////////z12//////////////////////////////////////////
-    	//S is now S10, Minv is S10*Minv and z is z11
+    ///////////////////z11/////////////////////////////////////////
     z[row][col]=0;
+	__syncthreads();
+    r01(r,q,l[i1]);
+ 
+    zaa(r,z,Minv,S,row,col);
+    
+    Zetas[i11]=z[row][col];
+    //////////////////z12//////////////////////////////////////////
+    //S is now S10, Minv is S10*Minv and z is z11
+    z[row][col]=0;
+	__syncthreads();
     r02(r,q,l[i1]);
     zab(r,z,Minv,S,row,col);
 
@@ -74,8 +77,10 @@ __global__ void Initialize(float state[],float m[], float l[],float I[],float Ze
     {
         Zetas[i13]=z[row][col];
     }
+    	__syncthreads();
     ////////////////z22///////////////////////////////////
     z[row][col]=0;
+	__syncthreads();
     MSsetup(Minv,S,row,col,m[i1],I,Iindex,i1);
     r02(r,q,l[i1]);
     zaa(r,z,Minv,S,row,col);
@@ -83,6 +88,7 @@ __global__ void Initialize(float state[],float m[], float l[],float I[],float Ze
     //////////////////z21/////////////////////////////////
     //S is now S20 Minv is S20*Minv and z is z22
     z[row][col]=0;
+	__syncthreads();
     r01(r,q,l[i1]);
     zab(r,z,Minv,S,row,col);
     Zetas[i21]=z[row][col];
@@ -95,4 +101,5 @@ __global__ void Initialize(float state[],float m[], float l[],float I[],float Ze
     {
         Zetas[i23]=z[row][col];
     }
+	__syncthreads();
 }

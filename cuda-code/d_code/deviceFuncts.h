@@ -25,6 +25,7 @@ __device__ void set_D_pend(float D[6][6],int row,int col)
         D[4][3]=1;
         D[5][4]=1;
     }
+	__syncthreads();
 }
 __device__ void set_Dt_pend(float D[6][6],int row,int col)
 {
@@ -37,6 +38,7 @@ __device__ void set_Dt_pend(float D[6][6],int row,int col)
         D[3][4]=1;
         D[4][5]=1;
     }
+	__syncthreads();
 }
 
 __device__ void invert_X(float X[6][6], float A[6][6],int row, int col)
@@ -65,9 +67,9 @@ __device__ void invert_X(float X[6][6], float A[6][6],int row, int col)
             }
           }
         }
-        syncthreads();
+        __syncthreads();
         X[row][col]=A[row][col];
-        syncthreads();
+        __syncthreads();
 }
 __device__ void make_W_pend(float Xinv[6][6], float D[6][6],int row , int col)                    
 {
@@ -75,7 +77,7 @@ __device__ void make_W_pend(float Xinv[6][6], float D[6][6],int row , int col)
     {
          Xinv[row][col]=0;
     }
-    
+    	__syncthreads();
     set_Dt_pend(D,row,col);
     Mat66Mult(Xinv,D,Xinv,row,col);
     set_D_pend(D,row,col);
@@ -91,7 +93,7 @@ __device__ void zaa(float r[],float z[6][6],float Minv[6][6],float S[6][6], int 
      {
           makeS(S,r);
      }
-   
+   	__syncthreads();
    
      Mat66Mult(Minv,S,z,row,col);
      
@@ -111,6 +113,7 @@ __device__ void zab(float r[],float z[6][6],float Minv[6][6],float S[6][6],int r
     {
          S[row][col]=0;
     }
+	__syncthreads();
     Mat66Mult(Minv,S,z,row,col);
 }
 
@@ -125,6 +128,7 @@ __device__ void makeS(float S[6][6],float r[])
      S[1][5]=-1*r[0];
      S[2][3]=-1*r[1];
      S[2][4]=r[0];
+
      
 }
 
@@ -142,7 +146,8 @@ __device__ void MSsetup(float Minv[6][6],float S[6][6],int row , int col,float m
     if (col==row)
     {
         S[row][col]=1;
-    }  
+    }
+		__syncthreads();  
 }
 
 //set up the state dependant force vector Fa
@@ -153,11 +158,13 @@ __device__ void Fa(float S[6][6],float w, float r[], float m,int row, int col)
     {
          S[row][col]=0;
     }
+	__syncthreads();
     if (row +col == 0)
     {
          S[3][0]=-m*w*w*r[0];
          S[4][0]=-g*m-m*w*w*r[1];
     }
+	__syncthreads();
 }
 
 //Function to find the r02 vector of the body
@@ -166,6 +173,7 @@ __device__ void r02(float r[], float angle,float L)
     r[0]=L*sin(angle)/2;
     r[1]=-1*L*cos(angle)/2;
     r[2]=0;
+	__syncthreads();
 }
 
 //Funtion to find the r01 position vector of the body
@@ -174,6 +182,7 @@ __device__ void r01(float r[], float angle,float L)
     r[0]=-1*L*sin(angle)/2;
     r[1]=L*cos(angle)/2;
     r[2]=0;
+	__syncthreads();
 }
 
 /**********************Matrix Operations*********************/
@@ -186,6 +195,7 @@ __device__ void transpose(float S[6][6], int row, int col)
      S[col][row]=S[row][col];
      S[row][col]=0;
   }
+	__syncthreads();
 }
 //Multipy two 6x6 matrices, saving the result in C
 __device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col)
@@ -197,9 +207,9 @@ __device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, i
         j+=A[row][l]*B[l][col];
         l++;
     }
-    syncthreads();
+    __syncthreads();
     C[row][col]=j;
-    syncthreads();
+    __syncthreads();
 }
 
 //Multiply a 6x6 and a 6x1 matrix together.  The 6x1 is actually a 6x6 but 
@@ -217,6 +227,6 @@ __device__ void Mat61Mult(float A[6][6], float B[6][6], float C[6][6],int row, i
         }
         C[row][0]=j;
     }
-    syncthreads();
+    __syncthreads();
 }
 

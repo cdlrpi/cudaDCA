@@ -41,32 +41,32 @@ __global__ void Disassemble(float Xinv[] ,float zs[], float oldAs[] ,float newAs
     	{
     		Vals[row][col]=oldAs[readOld];
     	}
-    
+    	__syncthreads();
     	if(col==0)
     	{
     		temp1[row][col]=zs[r123];
     		temp2[row][col]=zs[r213];
    		}	
-    
+    	__syncthreads();
     	//temp1 is z23 body 1
    		//temp2 is z13 body 2
     	temp1[row][col]=temp1[row][col]-temp2[row][col];
 
     	//temp1 is z123-z213
-    	syncthreads();
+    	__syncthreads();
     	if(col==0)
     	{
     		temp2[row][col]=Vals[row][3];
    		}
     	//temp2 is F2c2
     	A[row][col]=zs[r212];
-    	syncthreads();
+    	__syncthreads();
     	Mat61Mult(A,temp2,temp2,row,col);
     	temp2[row][col]=-1*temp2[row][col];
     	//temp2 is -1*z212*F2c2
     	temp2[row][col]=temp2[row][col]+temp1[row][col];
     	//temp2 is -z212*F2c2+z123-z213
-    	syncthreads();
+    	__syncthreads();
     	temp1[row][col]=zs[r121];
     	//temp1 is z121
     	if(col==0)
@@ -74,7 +74,7 @@ __global__ void Disassemble(float Xinv[] ,float zs[], float oldAs[] ,float newAs
      		A[row][col]=Vals[row][1];
     	}
     	//A is F1c1
-    	syncthreads();
+    	__syncthreads();
     	Mat61Mult(temp1,A,A,row,col);
     	//A is z121*F1c1
     	temp2[row][col]=A[row][col]+temp2[row][col];
@@ -98,17 +98,17 @@ __global__ void Disassemble(float Xinv[] ,float zs[], float oldAs[] ,float newAs
     	{
         	temp2[row][col]=Vals[row][1];
     	}
-    	syncthreads();
+    	__syncthreads();
     	Mat61Mult(temp1,temp2,temp1,row,col);
     	temp2[row][col]=zs[r122];
-    	syncthreads();
+    	__syncthreads();
     	Mat61Mult(temp2,A,temp2,row,col);
     	temp1[row][col]=temp1[row][col]+temp2[row][col];
     	if(col==0)
     	{
         	temp2[row][col]=zs[r123];
     	}
-    	syncthreads();
+    	__syncthreads();
     	temp2[row][col]=temp1[row][col]+temp2[row][col];//temp2 should hold A2 now
     
     	if (col==0)
@@ -124,14 +124,14 @@ __global__ void Disassemble(float Xinv[] ,float zs[], float oldAs[] ,float newAs
    		}
     
     	temp1[row][col]=zs[r211];
-    	syncthreads();
+    	__syncthreads();
     	Mat61Mult(temp1,A,A,row,col);
     	temp1[row][col]=zs[r212];
     	if(col==0)
     	{
     		temp2[row][col]=Vals[row][3];
     	}
-    	syncthreads();
+    	__syncthreads();
     	Mat61Mult(temp1,temp2,temp2,row,col);
    		if (col==0)
     	{
