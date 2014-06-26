@@ -39,23 +39,23 @@ void cudaAssemble(Body *bodies, int num, Body *newbds, int odd, int newlen)
 		}
 	}
 	
-	std::cout<<cudaMalloc(&d_ozs,sizeof(float)*(num-odd)*6*26);
-std::cout<<cudaDeviceSynchronize();
-	std::cout<<cudaMalloc(&d_nzs,sizeof(float)*(newlen-odd)*6*26);
-std::cout<<cudaDeviceSynchronize();
-	std::cout<<cudaMalloc(&d_Xinv,sizeof(float)*(newlen-odd)*5*5);	
-	std::cout<<cudaDeviceSynchronize();
-	std::cout<<cudaMemcpy(d_ozs, ozs, sizeof(float)*(num-odd)*6*26, cudaMemcpyHostToDevice);
+	cudaMalloc(&d_ozs,sizeof(float)*(num-odd)*6*26);
+cudaDeviceSynchronize();
+	cudaMalloc(&d_nzs,sizeof(float)*(newlen-odd)*6*26);
+cudaDeviceSynchronize();
+	cudaMalloc(&d_Xinv,sizeof(float)*(newlen-odd)*5*5);	
+	cudaDeviceSynchronize();
+cudaMemcpy(d_ozs, ozs, sizeof(float)*(num-odd)*6*26, cudaMemcpyHostToDevice);
 
 	dim3 dimBlock(6, 6,1);
 	dim3 dimGrid(numBlocks,1,1);
-std::cout<<cudaDeviceSynchronize();
+cudaDeviceSynchronize();
 	Assemble<<<dimGrid, dimBlock>>>(d_ozs, d_nzs, d_Xinv, numBlocks);	
-std::cout<<cudaDeviceSynchronize();
-	std::cout<<cudaMemcpy(nzs, d_nzs,sizeof(float)*(newlen-odd)*6*26, cudaMemcpyDeviceToHost);
-std::cout<<cudaDeviceSynchronize();
-	std::cout<<cudaMemcpy(Xinv, d_Xinv,sizeof(float)*(newlen-odd)*5*5, cudaMemcpyDeviceToHost);
-std::cout<<cudaDeviceSynchronize();
+cudaDeviceSynchronize();
+	cudaMemcpy(nzs, d_nzs,sizeof(float)*(newlen-odd)*6*26, cudaMemcpyDeviceToHost);
+cudaDeviceSynchronize();
+	cudaMemcpy(Xinv, d_Xinv,sizeof(float)*(newlen-odd)*5*5, cudaMemcpyDeviceToHost);
+cudaDeviceSynchronize();
 	for(int i = 0; i<newlen; i++)
 	{
 		for(int c = 0; c<6; c++)
@@ -108,9 +108,9 @@ std::cout<<cudaDeviceSynchronize();
 	
 	}
 
-	std::cout<<cudaFree(d_ozs);
-	std::cout<<cudaFree(d_nzs);
-	std::cout<<cudaFree(d_Xinv);
+	cudaFree(d_ozs);
+	cudaFree(d_nzs);
+	cudaFree(d_Xinv);
 	
 free(ozs);
 	free(nzs);

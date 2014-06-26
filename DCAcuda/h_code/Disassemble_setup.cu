@@ -64,27 +64,27 @@ void cudaDisassemble(float OldAF[], Body *morebds, Body *lessbds, int odd, int m
 
 	
    
-	std::cout<<cudaMalloc(&d_zs,sizeof(float)*(numBlocks*2)*6*26);
-	std::cout<<cudaDeviceSynchronize();
-	std::cout<<cudaMalloc(&d_newAF,sizeof(float)*(gpu_len)*6);
-	std::cout<<cudaDeviceSynchronize();
-	std::cout<<cudaMalloc(&d_oldAF,sizeof(float)*(lesslen-odd)*4*6);
-	std::cout<<cudaDeviceSynchronize();
-	std::cout<<cudaMalloc(&d_Xinv,sizeof(float)*(numBlocks)*5*5);	
-std::cout<<cudaDeviceSynchronize();
-	std::cout<<cudaMemcpy(d_zs, zs, sizeof(float)*(numBlocks*2)*6*26, cudaMemcpyHostToDevice);
-std::cout<<cudaDeviceSynchronize();
-	std::cout<<cudaMemcpy(d_Xinv, Xinv, sizeof(float)*(numBlocks)*5*5, cudaMemcpyHostToDevice);
-std::cout<<cudaDeviceSynchronize();
-	std::cout<<cudaMemcpy(d_oldAF, oldAF, sizeof(float)*(lesslen-odd)*4*6, cudaMemcpyHostToDevice);
+	cudaMalloc(&d_zs,sizeof(float)*(numBlocks*2)*6*26);
+	cudaDeviceSynchronize();
+	cudaMalloc(&d_newAF,sizeof(float)*(gpu_len)*6);
+	cudaDeviceSynchronize();
+	cudaMalloc(&d_oldAF,sizeof(float)*(lesslen-odd)*4*6);
+	cudaDeviceSynchronize();
+	cudaMalloc(&d_Xinv,sizeof(float)*(numBlocks)*5*5);	
+cudaDeviceSynchronize();
+	cudaMemcpy(d_zs, zs, sizeof(float)*(numBlocks*2)*6*26, cudaMemcpyHostToDevice);
+cudaDeviceSynchronize();
+	cudaMemcpy(d_Xinv, Xinv, sizeof(float)*(numBlocks)*5*5, cudaMemcpyHostToDevice);
+cudaDeviceSynchronize();
+	cudaMemcpy(d_oldAF, oldAF, sizeof(float)*(lesslen-odd)*4*6, cudaMemcpyHostToDevice);
 
 	dim3 dimBlock(6, 6,1);
 	dim3 dimGrid(numBlocks,1,1);
-	std::cout<<cudaDeviceSynchronize();
+	cudaDeviceSynchronize();
 	Disassemble<<<dimGrid, dimBlock>>>(d_Xinv, d_zs, d_oldAF, d_newAF, numBlocks);
-	std::cout<<cudaDeviceSynchronize();
-	std::cout<<cudaMemcpy(newAF, d_newAF,sizeof(float)*(gpu_len)*6, cudaMemcpyDeviceToHost);
-	std::cout<<cudaDeviceSynchronize();
+	cudaDeviceSynchronize();
+	cudaMemcpy(newAF, d_newAF,sizeof(float)*(gpu_len)*6, cudaMemcpyDeviceToHost);
+	cudaDeviceSynchronize();
 	for(int c = 0; c<(morelen)*4; c++)
 	{
 		for (int r = 0; r<6;r++)
@@ -106,10 +106,10 @@ std::cout<<cudaDeviceSynchronize();
 	}
 	//std::cin.get();
 	
-	std::cout<<cudaFree(d_zs);
-	std::cout<<cudaFree(d_newAF);
-	std::cout<<cudaFree(d_oldAF);
-	std::cout<<cudaFree(d_Xinv);
+	cudaFree(d_zs);
+	cudaFree(d_newAF);
+	cudaFree(d_oldAF);
+	cudaFree(d_Xinv);
 	
 	free(zs);
 	free(newAF);

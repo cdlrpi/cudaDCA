@@ -1,5 +1,15 @@
 
 #include <stdio.h>
+#include<cuda.h>
+__device__ void MSsetup(float Minv[6][6],float S[6][6],int row, int col, float m, float I[],int Iindex);
+__device__ void Fa(float S[6][6],float w, float r[], float m,int row, int col);
+__device__ void zab(float r[],float z[6][6],float Minv[6][6],float S[6][6], int row, int col);
+__device__ void zaa(float r[],float z[6][6],float Minv[6][6],float S[6][6], int row, int col);
+__device__ void r02(float r[], float angle,float L);
+__device__ void r01(float r[], float angle,float L);
+__device__ void Mat61Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
+__device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
+__device__ void printit(float A[6][6]);
 __global__ void Initialize(float state[],float m[], float l[],float I[],float Zetas[],int n)
 {
     //Variable Declarations
@@ -21,8 +31,10 @@ __global__ void Initialize(float state[],float m[], float l[],float I[],float Ze
     __shared__ float w;
     //////////////////q and w//////////////////////////////////////
     //To get q and w, either this:
-		__syncthreads();
+	__syncthreads();
     int i = 0;
+	q=0;
+	w=0;
     while (i <= i1)
     {
         q+=state[i];
@@ -31,20 +43,10 @@ __global__ void Initialize(float state[],float m[], float l[],float I[],float Ze
     }
 	__syncthreads();
    
-    /*
-    //or this, but only if less than 36 bodies:
-
-    __shared__ float lcl_state[2*n];
-    if (index < 2*n)
-    {
-        lcl_state[index]=state[index];
-    }
-    */
-    //then add them up to get the right number
 
     ////////////////Inverse Mass Matrix and shifter setup//////////////////////////////////
-    MSsetup(Minv,S,row,col,m[i1],I,Iindex,i1);
-    
+    MSsetup(Minv,S,row,col,m[i1],I,Iindex);
+	//printf("here");
     
     
     ////////////////////DCM/////////////////////////////////////////
@@ -81,7 +83,7 @@ __global__ void Initialize(float state[],float m[], float l[],float I[],float Ze
     ////////////////z22///////////////////////////////////
     z[row][col]=0;
 	__syncthreads();
-    MSsetup(Minv,S,row,col,m[i1],I,Iindex,i1);
+    MSsetup(Minv,S,row,col,m[i1],I,Iindex);
     r02(r,q,l[i1]);
     zaa(r,z,Minv,S,row,col);
     Zetas[i22]=z[row][col];

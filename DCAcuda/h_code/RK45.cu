@@ -1,10 +1,13 @@
+//	RK45.cu
+//
+//This file contains the function that performs Runge Kutta 45 integration using the DCA algorithm
 
+//Included Files
 #include "classes.h"
 #include <iostream>
-void pend_init(InitBody *bs,int n,float mass, float length);
-void full_drop(float x[],int n);
-void Time_init(float time[], float step, float final);
-void RK_45(float state[], float step, int n, InitBody *bs, Joint *js,float Y[]);
+
+//Function Prototypes
+//	Functions found in Functs.cu
 void arycpy(float A[],float B[],int n);
 void arycpy2(float A[],float B[],int n);
 void arycpy3(float A[],float B[],int n);
@@ -12,10 +15,20 @@ void set_up(float A[], float B[], float C[], int n , float h);
 void get_final_q(float x[], float h, float a[], float b[], float c[], float d[], float R[], int n);
 void get_final_qdot(float x[], float h, float a[], float b[], float c[], float d[], float R[], int n);
 void DCAhelp(float state[], InitBody *bs, Joint *js,int n, float Y[]);
-void printa(float A[], int n);
-//Function to perform Runge-Kutta 45 integration
+
+//RK_45
+//	Function used to perform Runge-Kutta 45 integration using the DCA algorithm.
+//	This numerical integrator uses a fixed time step.
+//		state is an array of the conditions at that timestep
+//		step is the length of one timestep
+//		n is the number of bodies
+//		bs is a list of bodies
+//		js is a list of joints
+//		Y is the array where the conditions at the next timestep will be stored
 void RK_45(float state[], float step, int n, InitBody *bs, Joint *js,float Y[])
 {
+	//Comments have not yet been completed in this file because I do not know how it works
+	//Variable Declarations
 	float *q = new float[n];
 	float *qdot = new float[n];
 	float *q1 = new float[n];
@@ -37,7 +50,7 @@ void RK_45(float state[], float step, int n, InitBody *bs, Joint *js,float Y[])
 	float *Y4=new float[2*n];
 	int i = 0;
 	float h = step/2.0;
-	std::cout<<h<<std::endl;
+	
 	while ( i < n)
 	{
 		q[i]=state[i];
@@ -51,37 +64,27 @@ void RK_45(float state[], float step, int n, InitBody *bs, Joint *js,float Y[])
 	arycpy2(tState,qdot1,n);
 	DCAhelp(tState,bs,js,n,Y1);
 	arycpy3(qddot1,Y1,n);
-	//printa(Y1,2*n);
+		
 	set_up(q,qdot1,q2,n,h);
 	set_up(qdot,qddot1,qdot2,n,h);
 	arycpy(tState,q2,n);
 	arycpy2(tState,qdot2,n);
-	std::cout<<"this"<<std::endl;
-	//printa(tState,2*n);
 	DCAhelp(tState,bs,js,n,Y2);
-	//printa(Y2,2*n);	
+	
 	arycpy3(qddot2,Y2,n);
-	
-
-	
 	set_up(q,qdot2,q3,n,h);
 	set_up(qdot,qddot2,qdot3,n,h);
 	arycpy(tState,q3,n);
 	arycpy2(tState,qdot3,n);
-	//printa(tState,2*n);	
 	DCAhelp(tState,bs,js,n,Y3);
 	arycpy3(qddot3,Y3,n);
-	//printa(tState,2*n);
-
 
 	set_up(q,qdot3,q4,n,h*2);
 	set_up(qdot,qddot3,qdot4,n,h*2);
 	arycpy(tState,q4,n);
 	arycpy2(tState,qdot4,n);
-	//printa(tState, 2*n);
 	DCAhelp(tState,bs,js,n,Y4);
 	arycpy3(qddot4,Y4,n);
-
 
 	get_final_q(q,h,qdot1,qdot2,qdot3,qdot4,Y, n);
 	get_final_qdot(qdot,h,qddot1,qddot2,qddot3,qddot4,Y, n);
@@ -106,4 +109,3 @@ void RK_45(float state[], float step, int n, InitBody *bs, Joint *js,float Y[])
 	delete[] Y3;
 	delete[] Y4;
 }
-

@@ -8,6 +8,12 @@
 	used by each body.
 */
 
+__device__ void make_W(float Xinv[6][6], float D[6][6],int row , int col);                    
+__device__ void get_X(float z1[6][6], float z2 [6][6], float D[6][6],int row , int col);
+__device__ void invert_X(float X[6][6], float A[6][6],int row, int col);
+__device__ void Mat61Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
+__device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
+
 __global__ void Assemble(float oldZs[],float newZs[],float Xinvs[], int nn)
 {
 	//Three shared memory matrices used to assemble the bodies	
@@ -56,14 +62,13 @@ __global__ void Assemble(float oldZs[],float newZs[],float Xinvs[], int nn)
     	z1[row][col]=oldZs[r211];
     	z2[row][col]=oldZs[r122];
     	__syncthreads();//To ensure matrices are done loading
-
-    	get_X_pend(z1,z2,A,row,col);//Get the X matrix and put it in A
+    	get_X(z1,z2,A,row,col);//Get the X matrix and put it in A
     	invert_X(A,z1,row,col);//Invert X and put it in A
     	if (col!=5 && row !=5)//Xinv is only a 5x5
     	{
         	Xinvs[wXinv]=A[row][col];//Save Xinv
     	}
-    	make_W_pend(A,z1,row,col);//Make W out of X
+    	make_W(A,z1,row,col);//Make W out of X
     
    	//A now holds W, and W can be used to find all of the new
 	//zeta valuess except z13 and z23

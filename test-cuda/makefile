@@ -15,3 +15,5 @@ cuexample.o: cuexample.cu
 
 cppexample.o: cppexample.cpp
 	$(CXX) -c cppexample.cpp
+clean:
+	rm -f *.o *~ core

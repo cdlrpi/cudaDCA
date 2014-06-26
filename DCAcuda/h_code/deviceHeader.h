@@ -15,6 +15,7 @@ __device__ void r01(float r[], float angle,float L);
 __device__ void DCM(float angle, float **B);
 __device__ void Mat61Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
 __device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
+__device__ void printit(float A[6][6]);
 
 #include "../d_code/deviceDisassemble.h"
 #include "../d_code/deviceAssemble.h"

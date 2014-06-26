@@ -1,3 +1,9 @@
+
+
+__device__ void make_W(float Xinv[6][6], float D[6][6],int row , int col);                    
+
+__device__ void Mat61Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
+
 __global__ void Disassemble(float Xinv[] ,float zs[], float oldAs[] ,float newAs[], int numBlocks)
 {
 		const int i1 = blockIdx.x;
@@ -83,7 +89,7 @@ __global__ void Disassemble(float Xinv[] ,float zs[], float oldAs[] ,float newAs
     	{
     		A[row][col]=Xinv[rXinv];
     	}
-    	make_W_pend(A,temp1,row,col);
+    	make_W(A,temp1,row,col);
     	//A is now W
     	Mat61Mult(A,temp2,A,row,col);
     	A[row][col]=-1*A[row][col];
