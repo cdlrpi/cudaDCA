@@ -30,6 +30,6 @@ npy.o: npy.h
 #RK45.o: classes.h
 #clean command to remove all temporary and unnecessary files
 clean:
-	rm -f *.o *~ bin/*~ bin/*.o *.mtx *.npy go  core
+	rm -f *.o *~ funct_bin/*~ funct_bin/*.o *.mtx *.npy go  core
 
 
