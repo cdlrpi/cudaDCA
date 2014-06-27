@@ -65,26 +65,17 @@ void cudaDisassemble(float OldAF[], Body *morebds, Body *lessbds, int odd, int m
 	
    
 	cudaMalloc(&d_zs,sizeof(float)*(numBlocks*2)*6*26);
-	cudaDeviceSynchronize();
 	cudaMalloc(&d_newAF,sizeof(float)*(gpu_len)*6);
-	cudaDeviceSynchronize();
 	cudaMalloc(&d_oldAF,sizeof(float)*(lesslen-odd)*4*6);
-	cudaDeviceSynchronize();
 	cudaMalloc(&d_Xinv,sizeof(float)*(numBlocks)*5*5);	
-cudaDeviceSynchronize();
 	cudaMemcpy(d_zs, zs, sizeof(float)*(numBlocks*2)*6*26, cudaMemcpyHostToDevice);
-cudaDeviceSynchronize();
 	cudaMemcpy(d_Xinv, Xinv, sizeof(float)*(numBlocks)*5*5, cudaMemcpyHostToDevice);
-cudaDeviceSynchronize();
 	cudaMemcpy(d_oldAF, oldAF, sizeof(float)*(lesslen-odd)*4*6, cudaMemcpyHostToDevice);
 
 	dim3 dimBlock(6, 6,1);
 	dim3 dimGrid(numBlocks,1,1);
-	cudaDeviceSynchronize();
 	Disassemble<<<dimGrid, dimBlock>>>(d_Xinv, d_zs, d_oldAF, d_newAF, numBlocks);
-	cudaDeviceSynchronize();
 	cudaMemcpy(newAF, d_newAF,sizeof(float)*(gpu_len)*6, cudaMemcpyDeviceToHost);
-	cudaDeviceSynchronize();
 	for(int c = 0; c<(morelen)*4; c++)
 	{
 		for (int r = 0; r<6;r++)

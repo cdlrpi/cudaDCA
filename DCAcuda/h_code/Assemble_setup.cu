@@ -40,46 +40,45 @@ void cudaAssemble(Body *bodies, int num, Body *newbds, int odd, int newlen)
 	}
 	
 	cudaMalloc(&d_ozs,sizeof(float)*(num-odd)*6*26);
-cudaDeviceSynchronize();
 	cudaMalloc(&d_nzs,sizeof(float)*(newlen-odd)*6*26);
-cudaDeviceSynchronize();
 	cudaMalloc(&d_Xinv,sizeof(float)*(newlen-odd)*5*5);	
-	cudaDeviceSynchronize();
-cudaMemcpy(d_ozs, ozs, sizeof(float)*(num-odd)*6*26, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_ozs, ozs, sizeof(float)*(num-odd)*6*26, cudaMemcpyHostToDevice);
 
 	dim3 dimBlock(6, 6,1);
 	dim3 dimGrid(numBlocks,1,1);
-cudaDeviceSynchronize();
 	Assemble<<<dimGrid, dimBlock>>>(d_ozs, d_nzs, d_Xinv, numBlocks);	
-cudaDeviceSynchronize();
+	
+	if (odd == 1)
+	{
+		for(int r = 0; r<6; r++)
+		{
+			for(int c=0; c<6; c++)
+			{
+				newbds[newlen-1].z11[r][c]=bodies[num-1].z11[r][c];
+				newbds[newlen-1].z12[r][c]=bodies[num-1].z12[r][c];
+				newbds[newlen-1].z21[r][c]=bodies[num-1].z21[r][c];
+				newbds[newlen-1].z22[r][c]=bodies[num-1].z22[r][c];
+				
+				if(r != 5 && c!=5)
+				{
+					newbds[newlen-1].Xinv[r][c]=bodies[num-1].Xinv[r][c];
+				}
+			}
+			newbds[newlen-1].z13[r]=bodies[num-1].z13[r];
+			newbds[newlen-1].z23[r]=bodies[num-1].z23[r];
+		}
+	}
+
 	cudaMemcpy(nzs, d_nzs,sizeof(float)*(newlen-odd)*6*26, cudaMemcpyDeviceToHost);
-cudaDeviceSynchronize();
 	cudaMemcpy(Xinv, d_Xinv,sizeof(float)*(newlen-odd)*5*5, cudaMemcpyDeviceToHost);
-cudaDeviceSynchronize();
+
 	for(int i = 0; i<newlen; i++)
 	{
 		for(int c = 0; c<6; c++)
 		{
 			for(int r = 0; r<6; r++)
 			{	
-				if (odd == 1 && i==newlen-1)
-				{
-					newbds[i].z11[r][c]= bodies[num-1].z11[r][c];
-					newbds[i].z12[r][c]= bodies[num-1].z12[r][c];
-					newbds[i].z21[r][c]= bodies[num-1].z21[r][c];
-					newbds[i].z22[r][c]= bodies[num-1].z22[r][c];
-					if(r!=5 && c!=5)
-					{
-						newbds[i].Xinv[r][c]= bodies[num-1].Xinv[r][c];
-					}
-					
-					if(c==0)
-					{
-						newbds[i].z13[r]= bodies[num-1].z13[r];
-						newbds[i].z23[r]= bodies[num-1].z23[r];
-					}
-				}
-				else
+				if(!(odd ==1 && i==newlen-1))
 				{
 					r11=26*(newlen-odd)*r+c+i*26;
 					r12=r11+6;

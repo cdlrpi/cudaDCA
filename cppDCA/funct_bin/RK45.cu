@@ -16,6 +16,7 @@ void get_final_q(float x[], float h, float a[], float b[], float c[], float d[],
 void get_final_qdot(float x[], float h, float a[], float b[], float c[], float d[], float R[], int n);
 void DCAhelp(float state[], InitBody *bs, Joint *js,int n, float Y[]);
 
+
 //RK_45
 //	Function used to perform Runge-Kutta 45 integration using the DCA algorithm.
 //	This numerical integrator uses a fixed time step.
@@ -70,7 +71,6 @@ void RK_45(float state[], float step, int n, InitBody *bs, Joint *js,float Y[])
 	arycpy(tState,q2,n);
 	arycpy2(tState,qdot2,n);
 	DCAhelp(tState,bs,js,n,Y2);
-	
 	arycpy3(qddot2,Y2,n);
 	set_up(q,qdot2,q3,n,h);
 	set_up(qdot,qddot2,qdot3,n,h);
@@ -78,7 +78,6 @@ void RK_45(float state[], float step, int n, InitBody *bs, Joint *js,float Y[])
 	arycpy2(tState,qdot3,n);
 	DCAhelp(tState,bs,js,n,Y3);
 	arycpy3(qddot3,Y3,n);
-
 	set_up(q,qdot3,q4,n,h*2);
 	set_up(qdot,qddot3,qdot4,n,h*2);
 	arycpy(tState,q4,n);

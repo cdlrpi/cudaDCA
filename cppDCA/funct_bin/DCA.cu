@@ -22,7 +22,8 @@ void Disassemble(Body *lessbds,Body *morebds, float oldAs[] ,float newAs[], int 
 
 //	Functions found in SolveBCs.cu
 void solve_BCs(Body *bodies, float AF[]);
-
+void printa(float a[], int n);
+void printm(float a[6][6]);
 //DCAhelp:
 //	Function that prepares the list of bodies for DCA and finds the final state vector
 //		state is the state of the system at that timestep
@@ -38,7 +39,6 @@ void DCAhelp(float state[], InitBody *bs, Joint *js,int n, float Y[])
 	Body *bodies = new Body[n];	//Create the list of bodies that will be use in DCA
 
 	Initialize(state,bs, bodies, n);	//Initialize the bodies, finding all zeta values
-
 	//Pass the list of bodies to DCA and return the accelerations 
 	//and forces of both handles of every body in the list
 	RecDCA(bodies, n, 0, AF);	
@@ -85,7 +85,7 @@ void DCAhelp(float state[], InitBody *bs, Joint *js,int n, float Y[])
 void RecDCA(Body *bodies, int n, int i, float AF[])
 {
 	if (n==1)	//If there is only 1 body
-	{
+	{	
 		solve_BCs(bodies, AF);	//Solve the boundary conditions and find the acceleratins and forces
 	}
 	else	//If there is more than 1 body

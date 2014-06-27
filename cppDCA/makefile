@@ -4,7 +4,7 @@
 NVCC = /usr/local/cuda-5.5/bin/nvcc
 
 # here are all the objects 
-OBJS = DCAdriver.o bin/Initialize.o bin/DCAfuncts.o bin/DCA.o bin/Functs.o bin/Assemble.o bin/solveBCs.o bin/Disassemble.o bin/RK45.o bin/npy.o
+OBJS = DCAdriver.o funct_bin/Initialize.o funct_bin/DCAfuncts.o funct_bin/DCA.o funct_bin/Functs.o funct_bin/Assemble.o funct_bin/solveBCs.o funct_bin/Disassemble.o funct_bin/RK45.o funct_bin/npy.o
 
 #rule to change .cu into .o
 .cu.o:
@@ -17,7 +17,7 @@ go: $(OBJS)
 
 #all gpu functions are included instead of compiled as separate objects because nvcc
 #returns an error when calls on the gpu are made to a separate file.
-DCAdriver.o: bin/classes.h bin/npy.h
+DCAdriver.o: funct_bin/classes.h funct_bin/npy.h
 Initialize.o: classes.h
 DCAfuncts.o: classes.h
 DCA.o: classes.h

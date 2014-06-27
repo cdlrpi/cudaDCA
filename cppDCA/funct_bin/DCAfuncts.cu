@@ -100,6 +100,13 @@ void invert_X(float X[6][6])
 	Xinv[1][0]=-1*X[3][2]/det;
 	Xinv[1][1]=X[2][2]/det;
 
+	for(int c=0; c<6; c++)
+	{
+		for(int r=0; r<6; r++)
+		{
+			X[r][c]=0;
+		}
+	}
 	//Save the Solution
 	for(int c = 0; c<2; c++)	//Loop through 2 columns
 	{

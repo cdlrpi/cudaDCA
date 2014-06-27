@@ -35,12 +35,12 @@ void Disassemble(Body *lessbds,Body *morebds, float oldAs[] ,float newAs[], int 
 		{
 			for(int c=0; c< 6; c++)	//Loop through every column
 			{
-    			temp1[r][c]=0;	//initialize temp1 to 0
-    			temp2[r][c]=0;	//initialize temp2 to 0
+				temp1[r][c]=0;	//initialize temp1 to 0
+				temp2[r][c]=0;	//initialize temp2 to 0
 				
 				if(c<4)	//If the column is less than 4
-    			{
-    				Vals[r][c]=oldAs[c+r*(num)*4+i*4];	//Save the forces and accelerations for the
+				{
+					Vals[r][c]=oldAs[c+r*(num)*4+i*4];	//Save the forces and accelerations for the
 				}										//current body in Vals
     							
 				if(c==0) //If the column is 0
@@ -53,7 +53,7 @@ void Disassemble(Body *lessbds,Body *morebds, float oldAs[] ,float newAs[], int 
 		
 		for(int r=0; r<6; r++)	//Loop through every row
 		{
-    			temp2[r][0]=Vals[r][3];	//Save b2.Fc2 into column 0 of temp2
+    		temp2[r][0]=Vals[r][3];	//Save b2.Fc2 into column 0 of temp2
    		}
 
     	Mat61Mult(morebds[j+1].z12,temp2,temp2);	//perform the operation b2.z12*temp2 and save

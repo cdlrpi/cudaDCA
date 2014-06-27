@@ -34,32 +34,19 @@ void CudaInitialize(InitBody* oldbds, float x[], int n, Body *newbds)
 	// Allocate and Load M and N to device memor
 
 	cudaMalloc(&d_x,x_size*sizeof(float));
-cudaDeviceSynchronize();
 	cudaMalloc(&d_m, n*sizeof(float));
-cudaDeviceSynchronize();
 	cudaMalloc(&d_l, n*sizeof(float));
-cudaDeviceSynchronize();
 	cudaMalloc(&d_I, I_size*sizeof(float));
-cudaDeviceSynchronize();
 	cudaMalloc(&d_zs, z_size*sizeof(float));
-	cudaDeviceSynchronize();
 	cudaMemcpy(d_x, x_gpu, x_size*sizeof(float), cudaMemcpyHostToDevice);
-cudaDeviceSynchronize();
 	cudaMemcpy(d_m, m_gpu, n*sizeof(float), cudaMemcpyHostToDevice);
-cudaDeviceSynchronize();
 	cudaMemcpy(d_I, I_gpu, I_size*sizeof(float), cudaMemcpyHostToDevice);
-cudaDeviceSynchronize();
 	cudaMemcpy(d_l, l_gpu, n*sizeof(float), cudaMemcpyHostToDevice);
 	dim3 dimBlock(6, 6,1);
 	dim3 dimGrid(n,1,1);
-	cudaDeviceSynchronize();
-	//printa(x_gpu,2*n);
-	//printf("here");
+
 	Initialize<<<dimGrid, dimBlock>>>(d_x, d_m, d_l, d_I, d_zs, n);
-	cudaDeviceSynchronize();
 	cudaMemcpy(zs_gpu, d_zs, z_size*sizeof(float), cudaMemcpyDeviceToHost);
-	cudaDeviceSynchronize();
-	//printa(zs_gpu,n*26*6);
 	for(int i = 0; i<n; i++)
 	{
 		for(int c = 0; c<6; c++)

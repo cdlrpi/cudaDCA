@@ -12,7 +12,7 @@ void Mat61Mult(float A[6][6], float B[6][6], float C[6][6]);
 void get_X(float z1[6][6], float z2[6][6], float D[6][6]);
 void invert_X(float X[6][6]);
 void make_W(float Xinv[6][6], float D[6][6]); 
-
+void printm(float a[6][6]);
 //Assemble:
 //	Function used to assemble a list of bodies into a list of bodies that is 
 //	half the size of the original list. To accomplish this, the list of old bodies

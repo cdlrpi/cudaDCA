@@ -10,8 +10,8 @@
 #include <malloc.h>
 #include <iostream>
 #include <math.h>
-#include "bin/classes.h"
-#include "bin/npy.h"
+#include "funct_bin/classes.h"
+#include "funct_bin/npy.h"
 
 //Function Prototypes
 //	Function found in RK45.cu
@@ -32,7 +32,7 @@ int main()
 	float *Y;	//Solution to each timestep
 	
 	//System Setup
-	int n=5; //Number of bodies
+	int n=50; //Number of bodies
 	bodies = new InitBody[n]; //List of initialization bodies is length n
 	joints = new Joint[n]; //List of joints is length n
 	inits = new float[2*n];	//Initial conditions are length 2*n
@@ -41,7 +41,7 @@ int main()
 
 	//Time Setup
 	float tstep= 0.001; //Length of a timestep [s]
-	float tfinal = 1; //Final time [s]
+	float tfinal = 2; //Final time [s]
 	int tlen = (int) floor(tfinal/tstep)+1;	//Number of timesteps
 
 	//Matrix Output Setup
