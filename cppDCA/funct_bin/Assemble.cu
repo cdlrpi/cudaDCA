@@ -4,15 +4,15 @@
 
 //Included Files
 #include "classes.h"
-
+#include <iostream>
 //Function Prototypes
 //	Functions found in DCAfuncts.cu
-void Mat66Mult(float A[6][6], float B[6][6], float C[6][6]);
-void Mat61Mult(float A[6][6], float B[6][6], float C[6][6]);
-void get_X(float z1[6][6], float z2[6][6], float D[6][6]);
-void invert_X(float X[6][6]);
-void make_W(float Xinv[6][6], float D[6][6]); 
-void printm(float a[6][6]);
+void Mat66Mult(double A[6][6], double B[6][6], double C[6][6]);
+void Mat61Mult(double A[6][6], double B[6][6], double C[6][6]);
+void get_X(double z1[6][6], double z2[6][6], double D[6][6]);
+void invert_X(double X[6][6]);
+void make_W(double Xinv[6][6], double D[6][6]); 
+void printm(double a[6][6]);
 //Assemble:
 //	Function used to assemble a list of bodies into a list of bodies that is 
 //	half the size of the original list. To accomplish this, the list of old bodies
@@ -28,8 +28,8 @@ void Assemble(Body *oldbds,Body *newbds, int len, int odd)
 {	
 	//Variable Declarations
 	//Both varaibles are temporary variables used for matrix operations
-	float z1[6][6];
-	float A[6][6];
+	double z1[6][6];
+	double A[6][6];
 
 	//Loop through every body in oldbds and newbds.  j is used to 
 	//reference a body in oldbds and i to reference a body in newbds
@@ -53,7 +53,7 @@ void Assemble(Body *oldbds,Body *newbds, int len, int odd)
 				newbds[i].Xinv[r][c]=A[r][c];	//Save Xinv in the new body corresponding to the 
 			}									//two used to construct X
 		}
-			
+		
 		make_W(A,z1);	//Using X inverse, construct the intermediate quantity W and save it in A
 		
 		Mat66Mult(A,oldbds[j+1].z12,z1);	//Perform A*b2.z12 and save the result in z1
@@ -89,7 +89,7 @@ void Assemble(Body *oldbds,Body *newbds, int len, int odd)
 
 		Mat66Mult(oldbds[j+1].z21,z1,z1);	//Perform b2.z21*z1 and store the result in z1
 		//z1 now holds b2.z21*W*b1.z21=z21
-
+		
 		for(int r = 0; r<6; r++)	//Loop through every row
 		{
 			for(int c=0; c<6; c++)	//Loop through every column
@@ -103,7 +103,7 @@ void Assemble(Body *oldbds,Body *newbds, int len, int odd)
 
 		Mat66Mult(oldbds[j+1].z21,z1,z1);	//Perform b2.z21*z1 and store the result in z1
 		//z1 now holds b2.z21*W*b2.z12
-	
+		
     	for(int r = 0; r<6; r++)	//Loop through every row
 		{
 			for(int c=0; c<6; c++)	//Loop through every column
@@ -114,23 +114,24 @@ void Assemble(Body *oldbds,Body *newbds, int len, int odd)
   
 		for(int r = 0; r<6; r++)	//Loop through every row
 		{
-			z1[r][0]=oldbds[j].z23[r]-oldbds[j+1].z13[r];	//Save b1.z23+b2.z13 into z1
+			z1[r][0]=oldbds[j].z23[r]-oldbds[j+1].z13[r];	//Save b1.z23-b2.z13 into z1
 		}
-
+		
     	Mat61Mult(A,z1,A);	//Perform A*z1 and store the result in A
 		//A now holds W*(b1.z23+b2.z13)=Y
     		
 		Mat61Mult(oldbds[j].z12,A,z1);	//Perform b1.z12*A and store the result in z1
 		//z1 now holds b1.z12*Y
-
+		
 		for(int r = 0; r< 6; r++)	//Loop through every row
 		{
 			newbds[i].z13[r]= oldbds[j].z13[r]-z1[r][0];	//Save the new z13
+			std::cout<<newbds[i].z13[r]<<"  ";
 		}
 	
 		Mat61Mult(oldbds[j+1].z21,A,z1);	//Perform b2.z21*A and store the result in z1
 		//z1 now holds b2.z21*Y
-
+		
 		for(int r=0; r< 6; r++)	//Loop through every row
 		{
 			newbds[i].z23[r]= oldbds[j+1].z23[r]+z1[r][0];	//Save the new z23 in newbds

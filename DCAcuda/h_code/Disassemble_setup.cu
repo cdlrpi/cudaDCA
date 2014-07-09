@@ -1,20 +1,20 @@
 #include "classes.h"
 #include <iostream>
-__global__ void Disassemble(float Xinv[],float Zs[],float oldAF[], float newAF[], int numBlocks);
-void printm(float A[6][6]);
-void printa(float A[], int x);
-void cudaDisassemble(float OldAF[], Body *morebds, Body *lessbds, int odd, int morelen, int lesslen, float AF[])
+__global__ void Disassemble(double Xinv[],double Zs[],double oldAF[], double newAF[], int numBlocks);
+void printm(double A[6][6]);
+void printa(double A[], int x);
+void cudaDisassemble(double OldAF[], Body *morebds, Body *lessbds, int odd, int morelen, int lesslen, double AF[])
 {	
-	float *d_oldAF, *d_newAF,*d_Xinv, *zs, *newAF, *Xinv, *oldAF;
-	float *d_zs;
+	double *d_oldAF, *d_newAF,*d_Xinv, *zs, *newAF, *Xinv, *oldAF;
+	double *d_zs;
 	int r11,r12,r13,r21,r22,r23,rXinv;
 	int newlen = (int) morelen*4;
 	int gpu_len = (int) (newlen-(4*odd));
 	int numBlocks = (int) morelen-lesslen;
-	zs = (float*) malloc(sizeof(float)*(numBlocks*2)*6*26);
-	newAF = (float*) malloc(sizeof(float)*(gpu_len)*6);
-	oldAF = (float*) malloc(sizeof(float)*(lesslen-odd)*4*6);
-	Xinv = (float*) malloc(sizeof(float)*(numBlocks)*5*5);
+	zs = (double*) malloc(sizeof(double)*(numBlocks*2)*6*26);
+	newAF = (double*) malloc(sizeof(double)*(gpu_len)*6);
+	oldAF = (double*) malloc(sizeof(double)*(lesslen-odd)*4*6);
+	Xinv = (double*) malloc(sizeof(double)*(numBlocks)*5*5);
 
 	
 	for(int c = 0; c<(lesslen-odd)*4; c++)
@@ -64,18 +64,18 @@ void cudaDisassemble(float OldAF[], Body *morebds, Body *lessbds, int odd, int m
 
 	
    
-	cudaMalloc(&d_zs,sizeof(float)*(numBlocks*2)*6*26);
-	cudaMalloc(&d_newAF,sizeof(float)*(gpu_len)*6);
-	cudaMalloc(&d_oldAF,sizeof(float)*(lesslen-odd)*4*6);
-	cudaMalloc(&d_Xinv,sizeof(float)*(numBlocks)*5*5);	
-	cudaMemcpy(d_zs, zs, sizeof(float)*(numBlocks*2)*6*26, cudaMemcpyHostToDevice);
-	cudaMemcpy(d_Xinv, Xinv, sizeof(float)*(numBlocks)*5*5, cudaMemcpyHostToDevice);
-	cudaMemcpy(d_oldAF, oldAF, sizeof(float)*(lesslen-odd)*4*6, cudaMemcpyHostToDevice);
+	cudaMalloc(&d_zs,sizeof(double)*(numBlocks*2)*6*26);
+	cudaMalloc(&d_newAF,sizeof(double)*(gpu_len)*6);
+	cudaMalloc(&d_oldAF,sizeof(double)*(lesslen-odd)*4*6);
+	cudaMalloc(&d_Xinv,sizeof(double)*(numBlocks)*5*5);	
+	cudaMemcpy(d_zs, zs, sizeof(double)*(numBlocks*2)*6*26, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_Xinv, Xinv, sizeof(double)*(numBlocks)*5*5, cudaMemcpyHostToDevice);
+	cudaMemcpy(d_oldAF, oldAF, sizeof(double)*(lesslen-odd)*4*6, cudaMemcpyHostToDevice);
 
 	dim3 dimBlock(6, 6,1);
 	dim3 dimGrid(numBlocks,1,1);
 	Disassemble<<<dimGrid, dimBlock>>>(d_Xinv, d_zs, d_oldAF, d_newAF, numBlocks);
-	cudaMemcpy(newAF, d_newAF,sizeof(float)*(gpu_len)*6, cudaMemcpyDeviceToHost);
+	cudaMemcpy(newAF, d_newAF,sizeof(double)*(gpu_len)*6, cudaMemcpyDeviceToHost);
 	for(int c = 0; c<(morelen)*4; c++)
 	{
 		for (int r = 0; r<6;r++)

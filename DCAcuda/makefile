@@ -8,7 +8,7 @@ OBJS = cudaDCAdriver.o h_code/Disassemble_setup.o h_code/Init_setup.o h_code/Ass
 
 #rule to change .cu into .o
 .cu.o:
-	$(NVCC) -arch=compute_30 -c $< -o $@
+	$(NVCC) -arch=compute_30 -c $< -o $@ 
 
 # make and compile
 go: $(OBJS)

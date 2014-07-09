@@ -8,7 +8,7 @@
 
 //Function Prototypes
 //	Functions found in Functs.cu
-void matmult61(float A[6][6], float B[6], float C[6]);
+void matmult61(double A[6][6], double B[6], double C[6]);
 
 //solve_BCs:
 //	Function used to solve for the acceleration and force at each handle of a pendulum.
@@ -16,16 +16,16 @@ void matmult61(float A[6][6], float B[6], float C[6]);
 //	as is the case for this simulation.
 //		bodies is the single body that is a product of all assembled bodies
 //		AF is where the accelerations and forces will be stored
-void solve_BCs(Body *bodies, float AF[])
+void solve_BCs(Body *bodies, double AF[])
 {
 	//Variable declarations
-	float Fc1[6];	//Constraint force on handle 1
-	float Fc2[6];	//Constraint force on handle 2
-	float A1[6];	//Acceleration of handle 1
-	float A2[6];	//Acceleration of handle 2
-	float temp[6];	//Temporary matrix used for matrix operations
-	float val;		//Temporary value
-	float M[3][4];	//Matrix used to solve a system of linear equations
+	double Fc1[6];	//Constraint force on handle 1
+	double Fc2[6];	//Constraint force on handle 2
+	double A1[6];	//Acceleration of handle 1
+	double A2[6];	//Acceleration of handle 2
+	double temp[6];	//Temporary matrix used for matrix operations
+	double val;		//Temporary value
+	double M[3][4];	//Matrix used to solve a system of linear equations
 
 	//This loop fills the M matrix with the correct values in z11 and z13 in order to solve
 	//for the force at handle 1.  This can be done because handle 1 of a pendulum is pinned,
@@ -112,7 +112,7 @@ void solve_BCs(Body *bodies, float AF[])
 
 //The function below is used for debugging and printing purposes only and can be
 //removed at any time
-void printM(float M[3][4])
+void printM(double M[3][4])
 {
 	for(int i = 0; i < 3; i++)
 	{

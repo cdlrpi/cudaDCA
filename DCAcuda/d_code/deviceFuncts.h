@@ -5,12 +5,12 @@
 
 //Function Prototypes
 //	All function called in this file are written in this file
-__device__ void set_Dt(float D[6][6],int row,int col);
-__device__ void set_D(float D[6][6],int row,int col);
-__device__ void transpose(float S[6][6],int row, int col);
-__device__ void makeS(float S[6][6],float *r);
-__device__ void Mat61Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
-__device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
+__device__ void set_Dt(double D[6][6],int row,int col);
+__device__ void set_D(double D[6][6],int row,int col);
+__device__ void transpose(double S[6][6],int row, int col);
+__device__ void makeS(double S[6][6],double *r);
+__device__ void Mat61Mult(double A[6][6], double B[6][6], double C[6][6],int row, int col);
+__device__ void Mat66Mult(double A[6][6], double B[6][6], double C[6][6],int row, int col);
 
 //get_X:
 //	Function used to find the intermediate quantity X for a body
@@ -19,7 +19,7 @@ __device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, i
 //		z2 is z22 for b1
 //		D is the matrix in which X will be stored
 //		row and col are the threadIdx.y and threadIdx.x
-__device__ void get_X(float z1[6][6], float z2 [6][6], float D[6][6],int row , int col)
+__device__ void get_X(double z1[6][6], double z2 [6][6], double D[6][6],int row , int col)
 {
 	//Add z1 and z2 together and store the solution in z1
     z1[row][col]=z1[row][col]+z2[row][col];
@@ -39,7 +39,7 @@ __device__ void get_X(float z1[6][6], float z2 [6][6], float D[6][6],int row , i
 //	Function used to set the matrix that defines the subspace of prohibited motion.
 //		D is the matrix in which the prohibited motion matrix will be stored. 
 //		row and col are	the threadIdx.y and threadIdx.x
-__device__ void set_D(float D[6][6],int row,int col)
+__device__ void set_D(double D[6][6],int row,int col)
 {
     D[row][col]=0;	//Set the D matrix to 0
 
@@ -59,7 +59,7 @@ __device__ void set_D(float D[6][6],int row,int col)
 //	Function used to set the transpose of the matrix that defines the subspace of prohibited motion.
 //		D is the matrix in which the transposed prohibited motion matrix will be stored.
 //		row and col are	the threadIdx.y and threadIdx.x
-__device__ void set_Dt(float D[6][6],int row,int col)
+__device__ void set_Dt(double D[6][6],int row,int col)
 {
     D[row][col]=0;	//Set the D matrix to 0;
 
@@ -80,12 +80,12 @@ __device__ void set_Dt(float D[6][6],int row,int col)
 //		X is the intermediate quantity X; X inverse will be stored in X, replacing it
 //		A is a temporary matrix used for matrix operations
 //		row and col are	the threadIdx.y and threadIdx.x
-__device__ void invert_X(float X[6][6], float A[6][6],int row, int col)
+__device__ void invert_X(double X[6][6], double A[6][6],int row, int col)
 {
      int s;
      int j;
-     float temp;
-     float temp2;
+     double temp;
+     double temp2;
      A[row][col]=0;
      if (row==col)
      {
@@ -116,7 +116,7 @@ __device__ void invert_X(float X[6][6], float A[6][6],int row, int col)
 //		Xinv is Xinverse;  W will be stored here
 //		D is an empty matrix used for matrix calculations
 //		row and col are	the threadIdx.y and threadIdx.x
-__device__ void make_W(float Xinv[6][6], float D[6][6],int row , int col)                    
+__device__ void make_W(double Xinv[6][6], double D[6][6],int row , int col)                    
 {
     if (row == 5 || col==5)
     {
@@ -139,7 +139,7 @@ __device__ void make_W(float Xinv[6][6], float D[6][6],int row , int col)
 //		Minv is the inverse mass matrix
 //		S is an empty matrix that is made into the shifter matrix corresponding to the r vector
 //		row and col are	the threadIdx.y and threadIdx.x
-__device__ void zaa(float r[],float z[6][6],float Minv[6][6],float S[6][6], int row, int col)
+__device__ void zaa(double r[],double z[6][6],double Minv[6][6],double S[6][6], int row, int col)
 {
      
      if ((row+col)==0)	//Ensure only 1 thread enters the if
@@ -167,7 +167,7 @@ __device__ void zaa(float r[],float z[6][6],float Minv[6][6],float S[6][6], int 
 //		Minv is the necessary shifter matrix multiplied by the inverse mass matrix
 //		S is an empty matrix to be made into the shifter matrix corresponding to the r vector
 //		row and col are	the threadIdx.y and threadIdx.x
-__device__ void zab(float r[],float z[6][6],float Minv[6][6],float S[6][6],int row , int col)
+__device__ void zab(double r[],double z[6][6],double Minv[6][6],double S[6][6],int row , int col)
 {    
     if (row+col==0)	//Ensure only 1 thread enters the if
 	{
@@ -187,7 +187,7 @@ __device__ void zab(float r[],float z[6][6],float Minv[6][6],float S[6][6],int r
 //	Function used to create a shifter matrix with the given position vector r
 //		S is the matrix in which the shifter matrix will be stored
 //		r is the position vector correspoding to the desired shifter matrix
-__device__ void makeS(float S[6][6],float r[])
+__device__ void makeS(double S[6][6],double r[])
 {
 	//Set the top right 3x3 matrix in S to the skew matrix of r
 	S[0][4]=-1*r[2];
@@ -208,7 +208,7 @@ __device__ void makeS(float S[6][6],float r[])
 //		I is the inertia tensor of the body
 //		row and col are	the threadIdx.y and threadIdx.x
 //		Iindex is the index used to read the inertia tensor
-__device__ void MSsetup(float Minv[6][6],float S[6][6],int row , int col,float m, float I[],int Iindex)
+__device__ void MSsetup(double Minv[6][6],double S[6][6],int row , int col,double m, double I[],int Iindex)
 {
     Minv[row][col]=0;	//Set Minv to 0
     S[row][col]=0;	//Set S to 0
@@ -235,9 +235,9 @@ __device__ void MSsetup(float Minv[6][6],float S[6][6],int row , int col,float m
 //		r is the corresponding position vector (r01 or r02)
 //		m is the mass of the body
 //		row and col are	the threadIdx.y and threadIdx.x
-__device__ void Fa(float S[6][6],float w, float r[], float m,int row, int col)
+__device__ void Fa(double S[6][6],double w, double r[], double m,int row, int col)
 {
-	float g = 9.81;	//Set the gravitational constant
+	double g = 9.81;	//Set the gravitational constant
 
 	if (col == 0)
 	{
@@ -259,7 +259,7 @@ __device__ void Fa(float S[6][6],float w, float r[], float m,int row, int col)
 //		r is the vector in which r02 will be stored
 //		angle is the ange of the body with respect to the vertical
 //		L is the length of the body
-__device__ void r02(float r[], float angle,float L)
+__device__ void r02(double r[], double angle,double L)
 {
     r[0]=L*sin(angle)/2;
     r[1]=-1*L*cos(angle)/2;
@@ -273,7 +273,7 @@ __device__ void r02(float r[], float angle,float L)
 //	2D nature of this simulation by removing the need for a direction cosine matrix
 //		r is the vector in which r02 will be stored
 //		angle is the ange of the body with respect to the vertical
-__device__ void r01(float r[], float angle,float L)
+__device__ void r01(double r[], double angle,double L)
 {
     r[0]=-1*L*sin(angle)/2;
     r[1]=L*cos(angle)/2;
@@ -286,7 +286,7 @@ __device__ void r01(float r[], float angle,float L)
 //	Function used to find the transpose of a 6x6 shifter matrix
 //		S is the shifter matrix to be transposed.  The transposed matrix will also be stored here.
 //		row and col are	the threadIdx.y and threadIdx.x
-__device__ void transpose(float S[6][6], int row, int col)
+__device__ void transpose(double S[6][6], int row, int col)
 {
 	if (row<3 && col>2)
 	{
@@ -306,9 +306,9 @@ __device__ void transpose(float S[6][6], int row, int col)
 //		B is the right matrix
 //		C is the matrix in which the solution is stored
 //		row and col are	the threadIdx.y and threadIdx.x
-__device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col)
+__device__ void Mat66Mult(double A[6][6], double B[6][6], double C[6][6],int row, int col)
 {
-    float j = 0;	//Temporary value used to store the solution
+    double j = 0;	//Temporary value used to store the solution
     int l=0;	//counter
     while (l<6)
     {
@@ -331,9 +331,9 @@ __device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, i
 //		B is a 6x6 matrix with the 6x1 matrix stored in its first column
 //		C is the matrix in which the solution is stored.  It is stored only in the first column
 //		row and col are	the threadIdx.y and threadIdx.x
-__device__ void Mat61Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col)
+__device__ void Mat61Mult(double A[6][6], double B[6][6], double C[6][6],int row, int col)
 {
-    float j = 0;//Temporary value used to store the solution
+    double j = 0;//Temporary value used to store the solution
     int l=0;	//counter
     if (col==0)
     {
@@ -349,7 +349,7 @@ __device__ void Mat61Mult(float A[6][6], float B[6][6], float C[6][6],int row, i
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //Functions below this line are used for debugging purposes only and can be deleted at any time
-__device__ void printit(float A[6][6])
+__device__ void printit(double A[6][6])
 {
 	if(threadIdx.x==threadIdx.y && threadIdx.y==0 && blockIdx.x==0)
 	{

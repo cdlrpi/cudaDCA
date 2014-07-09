@@ -9,14 +9,14 @@
 
 //Function Prototypes
 //	Functions found in DCAfuncts.cu
-void MSsetup(float Minv[6][6],float S[6][6],float m, float I[3][3]);
-void Fa(float S[6][6],float w, float r[], float m);
-void r02(float r[], float angle,float L);
-void r01(float r[], float angle,float L);
-void Mat66Mult(float A[6][6], float B[6][6], float C[6][6]);
-void Mat61Mult(float A[6][6], float B[6][6], float C[6][6]);
-void zaa(float r[],float z[6][6],float Minv[6][6],float S[6][6]);
-void zab(float r[],float z[6][6],float Minv[6][6],float S[6][6]);
+void MSsetup(double Minv[6][6],double S[6][6],double m, double I[3][3]);
+void Fa(double S[6][6],double w, double r[], double m);
+void r02(double r[], double angle,double L);
+void r01(double r[], double angle,double L);
+void Mat66Mult(double A[6][6], double B[6][6], double C[6][6]);
+void Mat61Mult(double A[6][6], double B[6][6], double C[6][6]);
+void zaa(double r[],double z[6][6],double Minv[6][6],double S[6][6]);
+void zab(double r[],double z[6][6],double Minv[6][6],double S[6][6]);
 
 
 //Initialize:
@@ -25,15 +25,15 @@ void zab(float r[],float z[6][6],float Minv[6][6],float S[6][6]);
 //		oldbds is the list of bodies that do not yet have zeta values
 //		newbds is the list of bodies where the new zeta values will be saved
 //		n is the number of bodies
-void Initialize(float state[],InitBody *oldbds,Body *newbds,int n)
+void Initialize(double state[],InitBody *oldbds,Body *newbds,int n)
 {
     //Variable Declarations
-    float z[6][6];
-    float Minv[6][6];
-    float S[6][6];
-    float rr[3];
-    float q;
-    float w;
+    double z[6][6];
+    double Minv[6][6];
+    double S[6][6];
+    double rr[3];
+    double q;
+    double w;
 	
 	for(int i =0; i< n; i++)	//Loop through every body
 	{	

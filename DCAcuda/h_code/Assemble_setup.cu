@@ -1,18 +1,18 @@
 #include "classes.h"
 #include <iostream>
-__global__ void Assemble(float oldZs[],float newZs[],float Xinvs[], int nn);
-void printm(float A[6][6]);
-void printa(float A[], int x);
+__global__ void Assemble(double oldZs[],double newZs[],double Xinvs[], int nn);
+void printm(double A[6][6]);
+void printa(double A[], int x);
 void cudaAssemble(Body *bodies, int num, Body *newbds, int odd, int newlen)
 {	
-	float *d_ozs,*d_nzs,*d_Xinv, *ozs, *nzs, *Xinv;
+	double *d_ozs,*d_nzs,*d_Xinv, *ozs, *nzs, *Xinv;
 	int r11,r12,r13,r21,r22,r23,rXinv;
 	
 	int gpulen=num-odd;
 	int numBlocks = (int) (gpulen/2);
-	ozs = (float*) malloc(sizeof(float)*(num-odd)*6*26);
-	nzs = (float*) malloc(sizeof(float)*(newlen-odd)*6*26);
-	Xinv = (float*) malloc(sizeof(float)*(newlen-odd)*5*5);
+	ozs = (double*) malloc(sizeof(double)*(num-odd)*6*26);
+	nzs = (double*) malloc(sizeof(double)*(newlen-odd)*6*26);
+	Xinv = (double*) malloc(sizeof(double)*(newlen-odd)*5*5);
 	
 	for(int i = 0; i<gpulen; i++)
 	{
@@ -39,10 +39,10 @@ void cudaAssemble(Body *bodies, int num, Body *newbds, int odd, int newlen)
 		}
 	}
 	
-	cudaMalloc(&d_ozs,sizeof(float)*(num-odd)*6*26);
-	cudaMalloc(&d_nzs,sizeof(float)*(newlen-odd)*6*26);
-	cudaMalloc(&d_Xinv,sizeof(float)*(newlen-odd)*5*5);	
-	cudaMemcpy(d_ozs, ozs, sizeof(float)*(num-odd)*6*26, cudaMemcpyHostToDevice);
+	cudaMalloc(&d_ozs,sizeof(double)*(num-odd)*6*26);
+	cudaMalloc(&d_nzs,sizeof(double)*(newlen-odd)*6*26);
+	cudaMalloc(&d_Xinv,sizeof(double)*(newlen-odd)*5*5);	
+	cudaMemcpy(d_ozs, ozs, sizeof(double)*(num-odd)*6*26, cudaMemcpyHostToDevice);
 
 	dim3 dimBlock(6, 6,1);
 	dim3 dimGrid(numBlocks,1,1);
@@ -69,8 +69,8 @@ void cudaAssemble(Body *bodies, int num, Body *newbds, int odd, int newlen)
 		}
 	}
 
-	cudaMemcpy(nzs, d_nzs,sizeof(float)*(newlen-odd)*6*26, cudaMemcpyDeviceToHost);
-	cudaMemcpy(Xinv, d_Xinv,sizeof(float)*(newlen-odd)*5*5, cudaMemcpyDeviceToHost);
+	cudaMemcpy(nzs, d_nzs,sizeof(double)*(newlen-odd)*6*26, cudaMemcpyDeviceToHost);
+	cudaMemcpy(Xinv, d_Xinv,sizeof(double)*(newlen-odd)*5*5, cudaMemcpyDeviceToHost);
 
 	for(int i = 0; i<newlen; i++)
 	{

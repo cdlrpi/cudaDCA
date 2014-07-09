@@ -8,14 +8,14 @@
 
 //Function Prototypes
 //	Functions found in deviceFuncts.h
-__device__ void MSsetup(float Minv[6][6],float S[6][6],int row, int col, float m, float I[],int Iindex);
-__device__ void Fa(float S[6][6],float w, float r[], float m,int row, int col);
-__device__ void zab(float r[],float z[6][6],float Minv[6][6],float S[6][6], int row, int col);
-__device__ void zaa(float r[],float z[6][6],float Minv[6][6],float S[6][6], int row, int col);
-__device__ void r02(float r[], float angle,float L);
-__device__ void r01(float r[], float angle,float L);
-__device__ void Mat61Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
-__device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
+__device__ void MSsetup(double Minv[6][6],double S[6][6],int row, int col, double m, double I[],int Iindex);
+__device__ void Fa(double S[6][6],double w, double r[], double m,int row, int col);
+__device__ void zab(double r[],double z[6][6],double Minv[6][6],double S[6][6], int row, int col);
+__device__ void zaa(double r[],double z[6][6],double Minv[6][6],double S[6][6], int row, int col);
+__device__ void r02(double r[], double angle,double L);
+__device__ void r01(double r[], double angle,double L);
+__device__ void Mat61Mult(double A[6][6], double B[6][6], double C[6][6],int row, int col);
+__device__ void Mat66Mult(double A[6][6], double B[6][6], double C[6][6],int row, int col);
 
 //Initialize:
 //	Function used to find the initial zeta values for every body in the system.
@@ -24,7 +24,7 @@ __device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, i
 //		I is an array holding the inertia tensors of all bodies in the system
 //		Zetas is the array that will hold all of the zeta values for all bodies
 //		n is the number of bodies
-__global__ void Initialize(float state[],float m[], float l[],float I[],float Zetas[],int n)
+__global__ void Initialize(double state[],double m[], double l[],double I[],double Zetas[],int n)
 {
     //Variable Declarations
 	//	Variables to distinguish threads
@@ -42,12 +42,12 @@ __global__ void Initialize(float state[],float m[], float l[],float I[],float Ze
     const int i23=i22+6; //only col = 0 can write
 
 	//	Temporary shared matrices for matrix operations
-    __shared__ float z[6][6];
-    __shared__ float Minv[6][6];
-    __shared__ float S[6][6];
-    __shared__ float r[3];
-    __shared__ float q;
-    __shared__ float w;
+    __shared__ double z[6][6];
+    __shared__ double Minv[6][6];
+    __shared__ double S[6][6];
+    __shared__ double r[3];
+    __shared__ double q;
+    __shared__ double w;
 
     int i = 0;	//counter
 	q=0;

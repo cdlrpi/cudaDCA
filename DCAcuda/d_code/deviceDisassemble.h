@@ -1,10 +1,10 @@
 
 
-__device__ void make_W(float Xinv[6][6], float D[6][6],int row , int col);                    
+__device__ void make_W(double Xinv[6][6], double D[6][6],int row , int col);                    
 
-__device__ void Mat61Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
+__device__ void Mat61Mult(double A[6][6], double B[6][6], double C[6][6],int row, int col);
 
-__global__ void Disassemble(float Xinv[] ,float zs[], float oldAs[] ,float newAs[], int numBlocks)
+__global__ void Disassemble(double Xinv[] ,double zs[], double oldAs[] ,double newAs[], int numBlocks)
 {
 		const int i1 = blockIdx.x;
 		const int row = threadIdx.y;
@@ -26,10 +26,10 @@ __global__ void Disassemble(float Xinv[] ,float zs[], float oldAs[] ,float newAs
 		//index to read old acceleration and force values, only col<4 can read this
     	const int readOld=col+row*numBlocks*4+i1*4;
 
-    	__shared__ float Vals[6][4];
-    	__shared__ float temp1[6][6];
-    	__shared__ float temp2[6][6];
-    	__shared__ float A[6][6];
+    	__shared__ double Vals[6][4];
+    	__shared__ double temp1[6][6];
+    	__shared__ double temp2[6][6];
+    	__shared__ double A[6][6];
 
 		//indices to write solution
     	const int wA11=col+row*numBlocks*8+i1*8;

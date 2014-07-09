@@ -1,20 +1,20 @@
 #include "classes.h"
-__global__ void Initialize(float state[],float m[], float l[],float I[],float Zetas[],int n);
-void printa(float a[], int n);
+__global__ void Initialize(double state[],double m[], double l[],double I[],double Zetas[],int n);
+void printa(double a[], int n);
 #include <iostream>
 #include <stdio.h>
-void CudaInitialize(InitBody* oldbds, float x[], int n, Body *newbds)
+void CudaInitialize(InitBody* oldbds, double x[], int n, Body *newbds)
 {
 	int x_size = 2*n;
 	int I_size = 3*n*3;
 	int z_size = 26*6*n;
 	int r11,r12,r13,r21,r22,r23;
-	float *x_gpu= (float*)malloc(x_size*sizeof(float));
-	float *m_gpu =(float*)malloc(n*sizeof(float));
-	float *l_gpu = (float*)malloc(n*sizeof(float));
-	float *I_gpu = (float*)malloc(I_size*sizeof(float));
-	float *zs_gpu = (float*)malloc(z_size*sizeof(float));
-	float *d_x, *d_m, *d_l, *d_I, *d_zs;
+	double *x_gpu= (double*)malloc(x_size*sizeof(double));
+	double *m_gpu =(double*)malloc(n*sizeof(double));
+	double *l_gpu = (double*)malloc(n*sizeof(double));
+	double *I_gpu = (double*)malloc(I_size*sizeof(double));
+	double *zs_gpu = (double*)malloc(z_size*sizeof(double));
+	double *d_x, *d_m, *d_l, *d_I, *d_zs;
 	
 	for(int i = 0; i<n; i++)
 	{
@@ -33,20 +33,20 @@ void CudaInitialize(InitBody* oldbds, float x[], int n, Body *newbds)
 
 	// Allocate and Load M and N to device memor
 
-	cudaMalloc(&d_x,x_size*sizeof(float));
-	cudaMalloc(&d_m, n*sizeof(float));
-	cudaMalloc(&d_l, n*sizeof(float));
-	cudaMalloc(&d_I, I_size*sizeof(float));
-	cudaMalloc(&d_zs, z_size*sizeof(float));
-	cudaMemcpy(d_x, x_gpu, x_size*sizeof(float), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_m, m_gpu, n*sizeof(float), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_I, I_gpu, I_size*sizeof(float), cudaMemcpyHostToDevice);
-	cudaMemcpy(d_l, l_gpu, n*sizeof(float), cudaMemcpyHostToDevice);
+	cudaMalloc(&d_x,x_size*sizeof(double));
+	cudaMalloc(&d_m, n*sizeof(double));
+	cudaMalloc(&d_l, n*sizeof(double));
+	cudaMalloc(&d_I, I_size*sizeof(double));
+	cudaMalloc(&d_zs, z_size*sizeof(double));
+	cudaMemcpy(d_x, x_gpu, x_size*sizeof(double), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_m, m_gpu, n*sizeof(double), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_I, I_gpu, I_size*sizeof(double), cudaMemcpyHostToDevice);
+	cudaMemcpy(d_l, l_gpu, n*sizeof(double), cudaMemcpyHostToDevice);
 	dim3 dimBlock(6, 6,1);
 	dim3 dimGrid(n,1,1);
 
 	Initialize<<<dimGrid, dimBlock>>>(d_x, d_m, d_l, d_I, d_zs, n);
-	cudaMemcpy(zs_gpu, d_zs, z_size*sizeof(float), cudaMemcpyDeviceToHost);
+	cudaMemcpy(zs_gpu, d_zs, z_size*sizeof(double), cudaMemcpyDeviceToHost);
 	for(int i = 0; i<n; i++)
 	{
 		for(int c = 0; c<6; c++)

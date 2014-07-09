@@ -10,9 +10,9 @@
 class InitBody
 {
 	public:
-		float m; //mass
-		float I[3][3]; //inertia tensor
-		float l; //length
+		double m; //mass
+		double I[3][3]; //inertia tensor
+		double l; //length
 };
 
 //Body:
@@ -22,16 +22,16 @@ class Body
 	public:
 
 		//Zeta values
-		float z11[6][6];
-		float z12[6][6];
-		float z13[6];
-		float z21[6][6];
-		float z22[6][6];
-		float z23[6];
+		double z11[6][6];
+		double z12[6][6];
+		double z13[6];
+		double z21[6][6];
+		double z22[6][6];
+		double z23[6];
 
 		//Xinv is an intermediate quantity that is stored because of its
 		//presence in assembly and disassembly
-		float Xinv[5][5];
+		double Xinv[5][5];
 
 };
 

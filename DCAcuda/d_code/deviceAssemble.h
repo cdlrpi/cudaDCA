@@ -4,11 +4,11 @@
 
 //Function Prototypes
 //	Functions found in deviceFuncts.h
-__device__ void make_W(float Xinv[6][6], float D[6][6],int row , int col);                    
-__device__ void get_X(float z1[6][6], float z2 [6][6], float D[6][6],int row , int col);
-__device__ void invert_X(float X[6][6], float A[6][6],int row, int col);
-__device__ void Mat61Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
-__device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, int col);
+__device__ void make_W(double Xinv[6][6], double D[6][6],int row , int col);                    
+__device__ void get_X(double z1[6][6], double z2 [6][6], double D[6][6],int row , int col);
+__device__ void invert_X(double X[6][6], double A[6][6],int row, int col);
+__device__ void Mat61Mult(double A[6][6], double B[6][6], double C[6][6],int row, int col);
+__device__ void Mat66Mult(double A[6][6], double B[6][6], double C[6][6],int row, int col);
 
 //Assemble:
 //	Function used to assemble a list of bodies into a list of bodies that is 
@@ -20,12 +20,12 @@ __device__ void Mat66Mult(float A[6][6], float B[6][6], float C[6][6],int row, i
 //		newZs is the list of zeta values for the newly made bodies
 //		Xinvs is the list of X inverse matrices for teh newly made bodies
 //		nn is the number of new bodies
-__global__ void Assemble(float oldZs[],float newZs[],float Xinvs[], int nn)
+__global__ void Assemble(double oldZs[],double newZs[],double Xinvs[], int nn)
 {
 	//Three shared memory matrices used for matrix operations	
-	__shared__ float z1[6][6];
-	__shared__ float z2[6][6];
-	__shared__ float A[6][6];
+	__shared__ double z1[6][6];
+	__shared__ double z2[6][6];
+	__shared__ double A[6][6];
 
 	//Variables to distinguish between threads
 	const int i1 = blockIdx.x;

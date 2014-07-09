@@ -11,9 +11,9 @@
 //		A is the 6x6 matrix
 //		B is the 6x1 matrix
 //		C is the matrix in which the solution is saved
-void matmult61(float A[6][6], float B[6], float C[6])
+void matmult61(double A[6][6], double B[6], double C[6])
 {	
-	float j[6];	//Temporary matrix
+	double j[6];	//Temporary matrix
 
 	for(int r = 0; r<6; r++)	//Loop through every row
 	{
@@ -42,10 +42,10 @@ void matmult61(float A[6][6], float B[6], float C[6])
 //		n is the number of bodies
 //		mass is the mass of the bodies
 //		length is the length of the bodies	
-void pend_init(InitBody *bs,int n,float mass, float length)
+void pend_init(InitBody *bs,int n,double mass, double length)
 {
 	int k=0;	//counter
-	float II;	//Inertia
+	double II;	//Inertia
 
 	while(k<n)	//Loop through all of the bodies
 	{
@@ -68,7 +68,7 @@ void pend_init(InitBody *bs,int n,float mass, float length)
 //	respect to the vertical.  All other angles are measured with respect to the previous link
 //		X is the array that the initial conditions will be saved in
 //		n is the number of bodies
-void horizontal_drop(float x[],int n)
+void horizontal_drop(double x[],int n)
 {
 	int k = 0;	//counter
 	x[k]=3.14159/2;	//Set the angle of the first link to a horizontal position
@@ -88,7 +88,7 @@ void horizontal_drop(float x[],int n)
 //		A is the array where the copy will be stored
 //		B is the array to be copied
 //		n is the number of values in the array
-void arycpy(float A[],float B[],int n)
+void arycpy(double A[],double B[],int n)
 {
 	int i=0;	//counter
 
@@ -106,7 +106,7 @@ void arycpy(float A[],float B[],int n)
 //		A is the array where the copy will be stored
 //		B is the array to be copied
 //		n is the number of values in the array
-void arycpy2(float A[], float B[], int n)
+void arycpy2(double A[], double B[], int n)
 {
 	int i = 0;	//counter
 
@@ -125,7 +125,7 @@ void arycpy2(float A[], float B[], int n)
 //		B is the array to be copied
 //		n is the number of values in the array
 //Function to copy the second half of array B into array A
-void arycpy3(float A[], float B[], int n)
+void arycpy3(double A[], double B[], int n)
 {
 	int i = 0;	//counter
 
@@ -144,7 +144,7 @@ void arycpy3(float A[], float B[], int n)
 //		C is where the solution is stored
 //		n is the number of bodies
 //		h is half of the length of one timestep
-void set_up(float A[], float B[], float C[], int n , float h)
+void set_up(double A[], double B[], double C[], int n , double h)
 {
 	int i = 0;	//counter
 
@@ -166,7 +166,7 @@ void set_up(float A[], float B[], float C[], int n , float h)
 //		d is qdot4
 //		R is where the solution is stored
 //		n is the number of bodies
-void get_final_q(float x[], float h, float a[], float b[], float c[], float d[], float R[], int n)
+void get_final_q(double x[], double h, double a[], double b[], double c[], double d[], double R[], int n)
 {
 	int i = 0;	//counter
 
@@ -188,7 +188,7 @@ void get_final_q(float x[], float h, float a[], float b[], float c[], float d[],
 //		d is qddot4
 //		R is where the solution is stored
 //		n is the number of bodies
-void get_final_qdot(float x[], float h, float a[], float b[], float c[], float d[], float R[], int n)
+void get_final_qdot(double x[], double h, double a[], double b[], double c[], double d[], double R[], int n)
 {
 	int i = 0;	//counter
 
@@ -213,7 +213,7 @@ Joint::Joint()
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //Functions below this line are used for debugging purposes only and can be removed at any time
-void printm(float A[6][6])
+void printm(double A[6][6])
 {	
 	for(int r = 0;r<6;r++)
 	{
@@ -226,7 +226,7 @@ void printm(float A[6][6])
 	}
 	std::cout<<std::endl<<std::endl;
 }
-void printx(float A[5][5])
+void printx(double A[5][5])
 {	
 	for(int r = 0;r<5;r++)
 	{
@@ -239,7 +239,7 @@ void printx(float A[5][5])
 	}
 	std::cout<<std::endl<<std::endl;
 }
-void printa(float A[], int x)
+void printa(double A[], int x)
 {
 	for(int i = 0; i<x;i++)
 	{

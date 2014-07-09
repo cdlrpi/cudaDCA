@@ -9,21 +9,21 @@
 
 //Function Prototypes
 //	Functions found in this file
-void RecDCA(Body *bodies, int n, int i, float AF[]);
+void RecDCA(Body *bodies, int n, int i, double AF[]);
 
 //	Functions found in Initialize.cu
-void Initialize(float state[],InitBody *oldbds,Body *newbds,int n);
+void Initialize(double state[],InitBody *oldbds,Body *newbds,int n);
 
 //	Functions found in Assemble.cu
 void Assemble(Body *oldbds,Body *newbds, int len, int odd);
 
 //	Functions found in Disassemble.cu
-void Disassemble(Body *lessbds,Body *morebds, float oldAs[] ,float newAs[], int num, int odd);
+void Disassemble(Body *lessbds,Body *morebds, double oldAs[] ,double newAs[], int num, int odd);
 
 //	Functions found in SolveBCs.cu
-void solve_BCs(Body *bodies, float AF[]);
-void printa(float a[], int n);
-void printm(float a[6][6]);
+void solve_BCs(Body *bodies, double AF[]);
+void printa(double a[], int n);
+void printm(double a[6][6]);
 //DCAhelp:
 //	Function that prepares the list of bodies for DCA and finds the final state vector
 //		state is the state of the system at that timestep
@@ -31,11 +31,11 @@ void printm(float a[6][6]);
 //		js is a list of joints
 //		n is the number of bodies
 //		Y is the array where the final velocities and accelerations are stored
-void DCAhelp(float state[], InitBody *bs, Joint *js,int n, float Y[])
+void DCAhelp(double state[], InitBody *bs, Joint *js,int n, double Y[])
 {
 	//Create the list that will hold all acceleration and force values for all bodies
-	float *AF = (float*) malloc(sizeof(float)*n*4*6);
-	float A[6][2*n];	//Create the matrix where only the accelerations will be stored
+	double *AF = (double*) malloc(sizeof(double)*n*4*6);
+	double A[6][2*n];	//Create the matrix where only the accelerations will be stored
 	Body *bodies = new Body[n];	//Create the list of bodies that will be use in DCA
 
 	Initialize(state,bs, bodies, n);	//Initialize the bodies, finding all zeta values
@@ -82,7 +82,7 @@ void DCAhelp(float state[], InitBody *bs, Joint *js,int n, float Y[])
 //		i is the level of recursion
 //		AF is the array in which the accelerations and forces at the handles of the bodies 
 //			will be stored.
-void RecDCA(Body *bodies, int n, int i, float AF[])
+void RecDCA(Body *bodies, int n, int i, double AF[])
 {
 	if (n==1)	//If there is only 1 body
 	{	
@@ -109,7 +109,7 @@ void RecDCA(Body *bodies, int n, int i, float AF[])
 		Assemble(bodies, newbds, newlen,odd);	//Assemble the bodies, storing them in newbds
 		
 		//Create a list of accelerations and forces of the new bodies.
-		float *AFo=(float*)malloc(sizeof(float)*6*newlen*4);
+		double *AFo=(double*)malloc(sizeof(double)*6*newlen*4);
 		
 		//Call the DCA function again to return the accelerations and forces of the new bodies
 		RecDCA(newbds,newlen,i+1 ,AFo);	

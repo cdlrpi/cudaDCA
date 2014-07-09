@@ -8,13 +8,13 @@
 
 //Function Prototypes
 //	Functions found in Functs.cu
-void arycpy(float A[],float B[],int n);
-void arycpy2(float A[],float B[],int n);
-void arycpy3(float A[],float B[],int n);
-void set_up(float A[], float B[], float C[], int n , float h);
-void get_final_q(float x[], float h, float a[], float b[], float c[], float d[], float R[], int n);
-void get_final_qdot(float x[], float h, float a[], float b[], float c[], float d[], float R[], int n);
-void DCAhelp(float state[], InitBody *bs, Joint *js,int n, float Y[]);
+void arycpy(double A[],double B[],int n);
+void arycpy2(double A[],double B[],int n);
+void arycpy3(double A[],double B[],int n);
+void set_up(double A[], double B[], double C[], int n , double h);
+void get_final_q(double x[], double h, double a[], double b[], double c[], double d[], double R[], int n);
+void get_final_qdot(double x[], double h, double a[], double b[], double c[], double d[], double R[], int n);
+void DCAhelp(double state[], InitBody *bs, Joint *js,int n, double Y[]);
 
 
 //RK_45
@@ -26,31 +26,31 @@ void DCAhelp(float state[], InitBody *bs, Joint *js,int n, float Y[]);
 //		bs is a list of bodies
 //		js is a list of joints
 //		Y is the array where the conditions at the next timestep will be stored
-void RK_45(float state[], float step, int n, InitBody *bs, Joint *js,float Y[])
+void RK_45(double state[], double step, int n, InitBody *bs, Joint *js,double Y[])
 {
 	//Comments have not yet been completed in this file because I do not know how it works
 	//Variable Declarations
-	float *q = new float[n];
-	float *qdot = new float[n];
-	float *q1 = new float[n];
-	float *qdot1 = new float[n];
-	float *q2 = new float[n];
-	float *qdot2 = new float[n];
-	float *q3 = new float[n];
-	float *qdot3 = new float[n];
-	float *q4 = new float[n];
-	float *qdot4 = new float[n];
-	float *qddot1 = new float[n];
-	float *qddot2 = new float[n];
-	float *qddot3 = new float[n];
-	float *qddot4 = new float[n];
-	float *tState = new float[2*n];
-	float *Y1 = (float*) malloc(sizeof(float)*2*n);
-	float *Y2= new float[2*n];
-	float *Y3=new float[2*n];
-	float *Y4=new float[2*n];
+	double *q = new double[n];
+	double *qdot = new double[n];
+	double *q1 = new double[n];
+	double *qdot1 = new double[n];
+	double *q2 = new double[n];
+	double *qdot2 = new double[n];
+	double *q3 = new double[n];
+	double *qdot3 = new double[n];
+	double *q4 = new double[n];
+	double *qdot4 = new double[n];
+	double *qddot1 = new double[n];
+	double *qddot2 = new double[n];
+	double *qddot3 = new double[n];
+	double *qddot4 = new double[n];
+	double *tState = new double[2*n];
+	double *Y1 = (double*) malloc(sizeof(double)*2*n);
+	double *Y2= new double[2*n];
+	double *Y3=new double[2*n];
+	double *Y4=new double[2*n];
 	int i = 0;
-	float h = step/2.0;
+	double h = step/2.0;
 	
 	while ( i < n)
 	{
