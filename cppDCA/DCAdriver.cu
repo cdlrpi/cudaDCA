@@ -35,7 +35,7 @@ int main()
 	double *Y;	//Solution to each timestep
 	
 	//System Setup
-	int n=4; //Number of bodies
+	int n=100; //Number of bodies
 	bodies = new InitBody[n]; //List of initialization bodies is length n
 	joints = new Joint[n]; //List of joints is length n
 	inits = new double[2*n];	//Initial conditions are length 2*n
@@ -44,7 +44,7 @@ int main()
 
 	//Time Setup
 	double tstep= 0.001; //Length of a timestep [s]
-	double tfinal = .002; //Final time [s]
+	double tfinal = .5; //Final time [s]
 	int tlen = (int) floor(tfinal/tstep)+1;	//Number of timesteps
 
 	//Matrix Output Setup

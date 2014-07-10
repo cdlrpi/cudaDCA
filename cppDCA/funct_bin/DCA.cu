@@ -6,7 +6,7 @@
 //Included Files
 #include "classes.h"
 #include <iostream>
-
+#include <stdio.h>
 //Function Prototypes
 //	Functions found in this file
 void RecDCA(Body *bodies, int n, int i, double AF[]);
@@ -39,6 +39,11 @@ void DCAhelp(double state[], InitBody *bs, Joint *js,int n, double Y[])
 	Body *bodies = new Body[n];	//Create the list of bodies that will be use in DCA
 
 	Initialize(state,bs, bodies, n);	//Initialize the bodies, finding all zeta values
+	for(int i =0; i<n; i++)
+	{
+		printm(bodies[i].z11);
+		getchar();
+	}
 	//Pass the list of bodies to DCA and return the accelerations 
 	//and forces of both handles of every body in the list
 	RecDCA(bodies, n, 0, AF);	

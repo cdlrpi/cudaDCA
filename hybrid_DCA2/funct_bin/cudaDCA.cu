@@ -31,7 +31,7 @@ void solve_BCs(double Zs[], double Xs[], double AF[]);
 
 void printa(double A[], int n);
 void printm(double A[6][6]);
-
+void Initialize(double state[],double m[], double l[],double I[],double Zetas[],int n);
 //DCAhelp:
 //	Function that prepares the list of bodies for DCA and finds the final state vector
 //		state is the state of the system at that timestep
@@ -47,7 +47,8 @@ void DCAhelp(double state[], double m[], double l[], double I[],int n, double Y[
 	double *Zs=(double*)malloc(sizeof(double)*n*6*26);
 	double *Xs=(double*)malloc(sizeof(double)*n*5*5);
 	
-	CudaInitialize(m,l,I, state, n, Zs);	//Initialize the bodies, finding all zeta values
+	Initialize(state, m, l, I, Zs, n);
+	//CudaInitialize(m,l,I, state, n, Zs);	//Initialize the bodies, finding all zeta values
 	
 	//Pass the list of bodies to DCA and return the accelerations 
 	//and forces of both handles of every body in the list

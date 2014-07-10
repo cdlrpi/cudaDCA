@@ -39,8 +39,8 @@ int main()
 	std::ofstream timedata;
 	std::ofstream numbods;
 	numbods.open("numbods.mtx");
-	timedata.open("graph_gpucpu2.mtx");
-	for(int numa = 4 ; numa<8; numa++)
+	timedata.open("graph2_init_on_cpu.mtx");
+	for(int numa = 4 ; numa<12; numa++)
 	{
 	n=0;
 	while(n<80000)
