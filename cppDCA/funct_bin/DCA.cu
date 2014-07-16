@@ -39,6 +39,7 @@ void DCAhelp(double state[], InitBody *bs, Joint *js,int n, double Y[])
 	Body *bodies = new Body[n];	//Create the list of bodies that will be use in DCA
 
 	Initialize(state,bs, bodies, n);	//Initialize the bodies, finding all zeta values
+	printm(bodies[0].z11);
 	for(int i =0; i<n; i++)
 	{
 		printm(bodies[i].z11);
