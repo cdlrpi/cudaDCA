@@ -39,14 +39,14 @@ int main()
 	int cut_off;
 	std::ofstream timedata;
 	std::ofstream numbods;
-	numbods.open("numbods3.mtx");
-	timedata.open("graph_hdca3-3.mtx");
-	for(int numa = 0; numa<15; numa+=3)
+	numbods.open("numbods5.mtx");
+	timedata.open("graph_hdca3-5.mtx");
+	for(int numa = 0; numa<8; numa+=1)
 	{
 	n=0;
 	std::cout<<"\n\n\n\n\n"<<numa<<"\n\n\n\n";
-	while(n<3000)
-	{/*
+	while(n<80000)
+	{
 		if(n<500)
 		{
 			n+=10;
@@ -63,8 +63,8 @@ int main()
 		{
 			n+=10000;
 		}
-*/
-n+=5;
+
+//n+=5;
 	int x = n;
 	cut_off=x;
 	for(int c =0; c<numa; c++)

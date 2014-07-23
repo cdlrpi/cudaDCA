@@ -15,7 +15,7 @@
 #define z223 51
 //Included Files
 
-
+#include <iostream>
 //Function Prototypes
 //	Functions found in DCAfuncts.cu
 void Mat61Mult(double A[6][6], double B[6][6], double C[6][6]);
@@ -61,7 +61,7 @@ void Disassemble(double lessZs[], double lessXs[],double moreZs[], double moreXs
 				}
 			}
 		}
-
+		
 		
 		for(int r=0; r<6; r++)	//Loop through every row
 		{
@@ -177,7 +177,7 @@ void Disassemble(double lessZs[], double lessXs[],double moreZs[], double moreXs
     	}
 
 	}	//End loop through bodies
-
+	//std::cout<<"a"<<std::endl;
 	//If there is an odd number of bodies, the forces and accelerations from
 	//the last body in lessbds must be added to the newAs list
 	if(odd==1)
