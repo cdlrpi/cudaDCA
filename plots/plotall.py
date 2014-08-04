@@ -10,9 +10,9 @@ class Body:
 
 
 
-with open('graph_hdca3-6.mtx') as file:
+with open('graphomphyb.mtx') as file:
     time4 = [[float(digit) for digit in line.split()] for line in file]
-with open('numbods6.mtx') as file:
+with open('numbodsomphyb.mtx') as file:
     YY = [[float(digit) for digit in line.split()] for line in file]
 
 

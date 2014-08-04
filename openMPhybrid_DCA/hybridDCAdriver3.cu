@@ -49,7 +49,7 @@ using namespace std;	//namespace for output and input
 //Main function
 int main()
 {
-	int reps=40;
+	int reps=20;
 	int	n=0;
 	int cut_off;
 	float *times=(float*)malloc(sizeof(float)*reps);

@@ -192,9 +192,6 @@ int numa =0;
 	//myfile2.close();
 	//std::cout<<n<<std::endl;
 	}
-	timedata<<"\n";
-	numbods<<"\n";
-	}
 	
 	numbods.close();
 	timedata.close();
