@@ -35,27 +35,45 @@ void Initialize(double m[], double l[],double II[],double Zetas[],int n);
 //Main function
 int main()
 {
-	int reps=40;
+	int reps=200;
 	int	n=0;
 	int cut_off;
 	float *times=(float*)malloc(sizeof(float)*reps);
 	std::ofstream timedata;
 	std::ofstream numbods;
-	numbods.open("numbods5.mtx");
-	timedata.open("graph_hdca3-5.mtx");
-	for(int numa = 0; numa<12; numa+=1)
+	numbods.open("numbods750.mtx");
+	timedata.open("1kcudaDCA2.mtx");
+	int numa;
+	for(int xx = 0; xx<4; xx+=1)
 	{
+		if(xx ==0)
+		{
+			numa = 0;
+		}
+		if(xx == 1)
+		{
+			numa = 1;
+		}
+		if (xx ==2)
+		{
+			numa = 3;
+		}
+		if(xx ==3)
+		{
+			numa = 6;
+		}
+		
 	n=0;
 	std::cout<<"\n\n\n\n\n"<<numa<<"\n\n\n\n";
-	while(n<4000)
+	while(n<750)
 	{
 		if(n<500)
 		{
-			n+=3;
+			n+=5;
 		}
 		else if( n<2000)
 		{
-			n+=10;
+			n+=20;
 		}
 		else if(n< 10000)
 		{
@@ -65,6 +83,7 @@ int main()
 		{
 			n+=10000;
 		}
+
 
 //n+=5;
 	int x = n;

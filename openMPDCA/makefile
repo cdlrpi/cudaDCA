@@ -1,18 +1,21 @@
 .SUFFIXES: .cu .o
 
 # Build tools
-NVCC = /usr/local/cuda-5.5/bin/nvcc
+NVCC = /usr/local/cuda/bin/nvcc
 
 # here are all the objects 
 OBJS = cudaDCAdriver.o funct_bin/DCAfuncts.o funct_bin/Functs.o funct_bin/Assemble.o funct_bin/solveBCs.o funct_bin/Disassemble.o funct_bin/RK45.o funct_bin/npy.o funct_bin/cudaDCA.o h_code/Assemble_setup.o h_code/Disassemble_setup.o h_code/Init_setup.o funct_bin/Initialize.cu funct_bin/updatezetas.cu
 
 #rule to change .cu into .o
 .cu.o:
-	$(NVCC) -arch=compute_30 -c $< -o $@
+	$(NVCC) -arch=compute_30   -c $< -o $@
+
+.cpp.o:
+	$(NVCC) -Xcompiler -fopenmp -c $< -o $@
 
 # make and compile
 go: $(OBJS)
-	$(NVCC) $(OBJS) -o go
+	$(NVCC) $(OBJS) -lgomp -o  go
 
 
 #all gpu functions are included instead of compiled as separate objects because nvcc
