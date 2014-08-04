@@ -40,7 +40,7 @@ void Update_Properties(double bodyZetas[],double nZetas[], int n, double state[]
 //		js is a list of joints
 //		n is the number of bodies
 //		Y is the array where the final velocities and accelerations are stored
-void DCAhelp(double state[], double m[], double l[], double I[],int n, double Y[],int cut_off, double bZs[])
+void DCAhelp(double state[], double m[], double l[], double I[],int n, double Y[],int cut_off, double bZs[], float times[], int reps)
 {
 	//Create the list that will hold all acceleration and force values for all bodies
 	double *AF = (double*) malloc(sizeof(double)*n*4*6);
@@ -55,10 +55,18 @@ void DCAhelp(double state[], double m[], double l[], double I[],int n, double Y[
 	
 	//Pass the list of bodies to DCA and return the accelerations 
 	//and forces of both handles of every body in the list
-
-
+	cudaEvent_t beginEvent;
+	cudaEvent_t endEvent;
+	cudaEventCreate( &beginEvent );
+	cudaEventCreate( &endEvent );
+	for(int i= 0; i<reps; i++)
+	{
+		cudaEventRecord( beginEvent, 0 );
 	RecDCA(Zs, n, 0, AF, cut_off,Xs);
-
+	cudaEventRecord( endEvent, 0 );
+	cudaEventSynchronize( endEvent );
+	cudaEventElapsedTime( &times[i], beginEvent, endEvent );
+	}
 	Y[n]=AF[8*n];	//For a pendulum, the fist acceleration value is in A[2][0]
 
 	for(int i = n+1, j=2; i<n*2; i++, j+=2)	//Loop through the acceleration matrix

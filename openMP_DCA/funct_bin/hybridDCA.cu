@@ -117,16 +117,16 @@ void RecDCA(std::vector<Body> bodies, std::vector<Forces> AF, int n,int cut_off)
 			odd =1;
 			newlen=(int)((x+1)/2);
 		}
-		
+		/*
 		if(i<cut_off)
 		{
 			cudaAssemble(bodies[i].Zs,bodies[i].Xs, x, bodies[i+1].Zs, bodies[i+1].Xs , odd, newlen);	//Assemble the bodies, storing them in newbds			
 		}
 		else
 		{
- 	
+ 	*/
 			Assemble(bodies[i].Zs,bodies[i].Xs,bodies[i+1].Zs,bodies[i+1].Xs, newlen,odd, x);	//Assemble the bodies, storing them in newbds
-		}
+		//}
 		i++;
 		x=newlen;
 	}
@@ -150,18 +150,18 @@ void RecDCA(std::vector<Body> bodies, std::vector<Forces> AF, int n,int cut_off)
 			odd = 1;
 		}
 	
-		if(i-1<cut_off)
-		{
+		//if(i-1<cut_off)
+		//{
 			
-			cudaDisassemble(AF[i].af, bodies[i-1].Zs,bodies[i-1].Xs , bodies[i].Zs,bodies[i].Xs, odd, x, newlen, AF[i-1].af);
+		//	cudaDisassemble(AF[i].af, bodies[i-1].Zs,bodies[i-1].Xs , bodies[i].Zs,bodies[i].Xs, odd, x, newlen, AF[i-1].af);
 			
-		}
+		//}
 	
-		else
+		//else
 
-		{
+	//	{
 			Disassemble(bodies[i].Zs,bodies[i].Xs,bodies[i-1].Zs,bodies[i-1].Xs,AF[i].af, AF[i-1].af, newlen,odd);
-		}
+		//}
 
 		i--;
 	}

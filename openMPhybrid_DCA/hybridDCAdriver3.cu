@@ -10,27 +10,41 @@
 //Included Files
 #include <malloc.h>
 #include <iostream>
+#include <string.h>
 #include <math.h>
-#include "funct_bin/classes.h"
+#include <cuda.h>
+#include <fstream>
+#include <limits>
+#include <stdio.h>
+#include <stdlib.h>
+#include <vector>
+//	created files
 #include "d_code/deviceDisassemble.h"
 #include "d_code/deviceAssemble.h"
 #include "d_code/deviceInitialize.h"
 #include "d_code/deviceFuncts.h"
 #include "funct_bin/npy.h"
-#include <math.h>
-#include <fstream>
-#include <limits>
+#include "funct_bin/classes.h"
 
 
 //Function Prototypes
 //	Function found in RK45.cu
-void RK_45(double state[], double step, int n, double m[], double l[], double II[],double Y[],int cut_off, double Zs[], float times[], int reps);
+void RK_45(double state[], double step, int n,double m[], double l[], double II[],double Y[],int cut_off,  std::vector<Body> body, std::vector<Forces> AF, double Zs[],float times[], int reps);
 
 //	Functions found in Functs.cu
 void pend_init(double m[], double l[], double II[],int n,double mass, double length);
 void horizontal_drop(double x[],int n);
 void set_up(double A[], double B[], double C[], int n , double h);
+
+//	Functions found in Igaoibn;aeirn
 void Initialize(double m[], double l[],double II[],double Zetas[],int n);
+void printa(double A[], int n);
+//Body::Body(int n);
+
+// Functions found in findCutoff.cu
+int findCutoff(int n, int accuracy);
+
+using namespace std;	//namespace for output and input
 
 //Main function
 int main()
@@ -41,8 +55,8 @@ int main()
 	float *times=(float*)malloc(sizeof(float)*reps);
 	std::ofstream timedata;
 	std::ofstream numbods;
-	numbods.open("numbods5.mtx");
-	timedata.open("graph_hdca3-5.mtx");
+	numbods.open("numbods_hybomp1-1.mtx");
+	timedata.open("graph_hybomp1-1.mtx");
 	for(int numa = 0; numa<12; numa+=1)
 	{
 	n=0;
@@ -67,29 +81,7 @@ int main()
 		}
 
 //n+=5;
-	int x = n;
-	cut_off=x;
-	for(int c =0; c<numa; c++)
-	{
-		if(x==1)
-		{
-			cut_off=0;
-		}
-		else if( x%2==0)
-		{
-			x=x/2;
-		}
-		else
-		{
-			x++;
-			x=x/2;
-		}
-	}
-	//std::cout<<x<<std::endl;
-	if(cut_off !=0)
-	{
-		cut_off =x;
-	}
+	cut_off = numa;
 	
 
 	std::cout<<"xxxx"<<cut_off<<"xxxx";
@@ -107,12 +99,36 @@ int main()
 	//myfile2.open("Vals.mtx");
   	//myfile.open ("output.mtx");
 	//System Setup
+		vector<Body> bodies;
+	vector<Forces> AF;
+	int x=n;
+	while(x != 1)
+	{	
+		Body b(x);
+		Forces a(x);
+		bodies.push_back(b);
+		AF.push_back(a);
+		if(x%2==0)
+		{
+			x/=2;
+		}
+		else
+		{
+			x++;
+			x/=2;
+		}
+	}
+	Body b(x);
+	Forces a(x);
+	bodies.push_back(b);
+	AF.push_back(a);
+
+	Zs = (double*)malloc(sizeof(double)*6*26*n);
 	inits = (double*)malloc(sizeof(double)*2*n);	//Initial conditions are length 2*n
 	Y = (double*)malloc(sizeof(double)*2*n);	//Timestep solution is length 2*n
 	m = (double*)malloc(sizeof(double)*n);
 	l = (double*)malloc(sizeof(double)*n);
 	II = (double*)malloc(sizeof(double)*n*3*3);
-	Zs = (double*)malloc(sizeof(double)*n*26*6);
 	pend_init(m,l,II,n,1.0,1.0); //Initialize mass, length, and inertia of all bodies 
 
 	Initialize(m, l, II, Zs, n);
@@ -123,7 +139,7 @@ int main()
 
 	//Time Setup
 	double tstep= 0.001; //Length of a timestep [s]
-	double tfinal = 0.001; //Final time [s]
+	double tfinal = 0.01; //Final time [s]
 	int tlen = (int) floor(tfinal/tstep)+1;	//Number of timesteps
 
 	//Matrix Output Setup
@@ -144,14 +160,10 @@ int main()
 	//System Initialization
 	horizontal_drop(inits,n);	//Set the initial conditions
 	
-	//Save the initial conditions in the solution matrix
 
-	//myfile << "\n";
+		RK_45(inits,tstep,n,m,l,II,Y,numa,bodies, AF,Zs,times,reps);	//Find the solution at that timestep
 
-	//Numerical Integration
-	//for(int t=1; t<tlen; t++)	//Loop through every timestep
-	//{
-RK_45(inits,tstep,n,m,l,II,Y,cut_off,Zs,times, reps);	//Find the solution at that timestep
+
 
 	//	for(int i = 0; i<2*n;i++)	//Loop through the solution
 		//{
@@ -177,11 +189,7 @@ RK_45(inits,tstep,n,m,l,II,Y,cut_off,Zs,times, reps);	//Find the solution at tha
 	//npy_save_double("Vals.npy",fortran_order,2,shape2,&Vals[0][0]);	//Output values to find energy
 	
 	//Free memory
-free(inits);
-	free(II);
-	free(m);
-	free(l);
-	free(Y);
+
 	
 	//myfile.close();
 	//myfile2.close();

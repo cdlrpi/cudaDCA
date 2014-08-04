@@ -14,7 +14,7 @@ void arycpy3(double A[],double B[],int n);
 void set_up(double A[], double B[], double C[], int n , double h);
 void get_final_q(double x[], double h, double a[], double b[], double c[], double d[], double R[], int n);
 void get_final_qdot(double x[], double h, double a[], double b[], double c[], double d[], double R[], int n);
-void DCAhelp(double state[], double m[], double l[], double I[],int n, double Y[],int cut_off, double Zs[]);
+void DCAhelp(double state[], double m[], double l[], double I[],int n, double Y[],int cut_off, double Zs[], float times[],int reps);
 
 
 //RK_45
@@ -26,7 +26,7 @@ void DCAhelp(double state[], double m[], double l[], double I[],int n, double Y[
 //		bs is a list of bodies
 //		js is a list of joints
 //		Y is the array where the conditions at the next timestep will be stored
-void RK_45(double state[], double step, int n,double m[], double l[], double II[],double Y[],int cut_off, double Zs[])
+void RK_45(double state[], double step, int n,double m[], double l[], double II[],double Y[],int cut_off, double Zs[],float times[], int reps)
 {
 	//Comments have not yet been completed in this file because I do not know how it works
 	//Variable Declarations
@@ -64,7 +64,7 @@ void RK_45(double state[], double step, int n,double m[], double l[], double II[
 	arycpy(qdot1,qdot,n);
 	arycpy(tState,q1,n);
 	arycpy2(tState,qdot1,n);
-	DCAhelp(tState,m,l,II,n,Y1,cut_off,Zs);
+	DCAhelp(tState,m,l,II,n,Y1,cut_off,Zs,times,reps);
 
 	arycpy3(qddot1,Y1,n);
 	
