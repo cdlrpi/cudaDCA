@@ -10,11 +10,11 @@ class Body:
 
 
 
-with open('1kcudaDCA2.mtx') as file:
+with open('4kcudaDCA1.mtx') as file:
     cuda = [[float(digit) for digit in line.split()] for line in file]
-with open('numbods750.mtx') as file:
+with open('numbodsomphyb4k.mtx') as file:
     YY = [[float(digit) for digit in line.split()] for line in file]
-with open('graphomphyb750.mtx') as file:
+with open('graphomphyb4k.mtx') as file:
     omp = [[float(digit) for digit in line.split()] for line in file]
 
 

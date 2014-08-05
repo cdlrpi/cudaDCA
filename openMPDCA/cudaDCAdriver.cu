@@ -35,16 +35,16 @@ void Initialize(double m[], double l[],double II[],double Zetas[],int n);
 //Main function
 int main()
 {
-	int reps=200;
+	int reps=20;
 	int	n=0;
 	int cut_off;
 	
 	std::ofstream timedata;
 	std::ofstream numbods;
-	numbods.open("numbodsomphyb750.mtx");
-	timedata.open("graphomphyb750.mtx");
+	numbods.open("numbodsomphyb4k.mtx");
+	timedata.open("graphomphyb4k.mtx");
 
-	int numa;
+	int numa = 0;
 	for(int xx = 0; xx<4; xx+=1)
 	{
 		if(xx ==0)
@@ -65,7 +65,7 @@ int main()
 		}
 	n=0;
 	std::cout<<"\n\n\n\n\n"<<numa<<"\n\n\n\n";
-	while(n<750)
+	while(n<4000)
 	{
 		if(n<500)
 		{

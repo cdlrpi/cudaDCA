@@ -35,14 +35,14 @@ void Initialize(double m[], double l[],double II[],double Zetas[],int n);
 //Main function
 int main()
 {
-	int reps=200;
+	int reps=20;
 	int	n=0;
 	int cut_off;
 	float *times=(float*)malloc(sizeof(float)*reps);
 	std::ofstream timedata;
 	std::ofstream numbods;
-	numbods.open("numbods750.mtx");
-	timedata.open("1kcudaDCA2.mtx");
+	numbods.open("numbods4k.mtx");
+	timedata.open("4kcudaDCA1.mtx");
 	int numa;
 	for(int xx = 0; xx<4; xx+=1)
 	{
@@ -65,7 +65,7 @@ int main()
 		
 	n=0;
 	std::cout<<"\n\n\n\n\n"<<numa<<"\n\n\n\n";
-	while(n<750)
+	while(n<4000)
 	{
 		if(n<500)
 		{
