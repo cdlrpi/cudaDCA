@@ -372,7 +372,7 @@ __device__ void Mat61Mult_gpu(double A[6][6], double B[6][6], double C[6][6],int
     }
     __syncthreads();
 }
-
+/*
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //Functions below this line are used for debugging purposes only and can be deleted at any time
 __device__ void printit_gpu(double A[6][6],int n)
@@ -396,4 +396,4 @@ __device__ void printit_gpu(double A[6][6],int n)
 	
 }
 }}
-
+*/

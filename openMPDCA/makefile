@@ -8,7 +8,7 @@ OBJS = cudaDCAdriver.o funct_bin/DCAfuncts.o funct_bin/Functs.o funct_bin/Assemb
 
 #rule to change .cu into .o
 .cu.o:
-	$(NVCC) -arch=compute_30   -c $< -o $@
+	$(NVCC)  -c $< -o $@
 
 .cpp.o:
 	$(NVCC) -Xcompiler -fopenmp -c $< -o $@
