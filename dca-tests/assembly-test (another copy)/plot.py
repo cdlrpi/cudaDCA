@@ -1,0 +1,35 @@
+import numpy as np
+import math
+import matplotlib.pyplot as plt
+class Body:
+	pass
+
+
+
+#Y = np.load('mat.npy')
+
+
+
+with open('cpuassembletime2.mtx') as file:
+    time4 = [[float(digit) for digit in line.split()] for line in file]
+with open('gpuassembletime2.mtx') as file:
+    time5 = [[float(digit) for digit in line.split()] for line in file]
+with open('numbods.mtx') as file:
+    YY = [[float(digit) for digit in line.split()] for line in file]
+
+
+
+Time4=np.array(time4,dtype=np.float64)
+Time5=np.array(time5,dtype=np.float64)
+
+
+#print(Vals)
+numbods=np.array(YY,dtype=np.float64)
+
+#plt.plot(numbods[0,:],Time4[0,:],numbods[0,:],Time4[1,:],numbods[0,:],Time4[2,:],numbods[0,:],Time4[3,:],numbods[0,:],Time4[4,:],numbods[0,:],Time5[0,:],numbods[0,:],Time5[1,:],numbods[0,:],Time5[2,:],numbods[0,:],Time5[3,:], numbods[0,:], Time5[4,:], numbods[0,:], Time5[5,:], numbods[0,:], Time5[6,:])
+plt.plot(numbods[0,:],Time4[0,:],numbods[0,:],Time5[0,:])
+plt.ylabel("Time [ms]")
+plt.xlabel("number of bodies")
+plt.title("gpu vs cpu assembly")
+plt.legend(['cpu assembly', 'gpu assembly with transfer','gpu assembly no transfer'],'best')
+plt.show()

@@ -1,0 +1,362 @@
+void find_partZ12(double Zetas[], double Mass[], double Inertia[], int n, int body, double Body_Vectors[])
+{
+	int rowid = n*26;
+	int colid = body*26+z12;
+	int inertiaid = body*3;
+	int Vectorid1 = body*6+3;
+	Zetas[colid] = 1/Inertia[inertiaid];
+	Zetas[colid +1]=0;
+	Zetas[colid +2]=0;
+	Zetas[colid +3]=0;
+	Zetas[colid +4]=-Body_Vectors[Vectorid1+2]/Inertia[inertiaid];
+	Zetas[colid+5]=Body_Vectors[Vectorid1+1]/Inertia[inertiaid];
+	Zetas[rowid+colid]=0;
+	Zetas[rowid+colid+1]=1/Inertia[inertiaid+1];
+	Zetas[rowid+colid+2]=0;
+	Zetas[rowid+colid+3]=Body_Vectors[Vectorid1+2]/Inertia[inertiaid+1];
+	Zetas[rowid+colid+4]=0;
+	Zetas[rowid+colid+5]=-Body_Vectors[Vectorid1]/Inertia[inertiaid+1];
+	Zetas[2*rowid+colid]=0;
+	Zetas[2*rowid+colid+1]=0;
+	Zetas[2*rowid+colid+2]=1/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+3]=-Body_Vectors[Vectorid1+1]/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+4]=Body_Vectors[Vectorid1]/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+5]=0;
+	Zetas[3*rowid+colid]=0;
+	Zetas[3*rowid+colid+1]=0;
+	Zetas[3*rowid+colid+2]=0;
+	Zetas[3*rowid+colid+3]=(1/Mass[body]);
+	Zetas[3*rowid+colid+4]=0;
+	Zetas[3*rowid+colid+5]=0;
+	Zetas[4*rowid+colid]=0;
+	Zetas[4*rowid+colid+1]=0;
+	Zetas[4*rowid+colid+2]=0;
+	Zetas[4*rowid+colid+3]=0;
+	Zetas[4*rowid+colid+4]=(1/Mass[body]);
+	Zetas[4*rowid+colid+5]=0;
+	Zetas[5*rowid+colid]= 0;
+	Zetas[5*rowid+colid+1]=0;
+	Zetas[5*rowid+colid+2]=0;
+	Zetas[5*rowid+colid+3]=0;
+	Zetas[5*rowid+colid+4]=0;
+	Zetas[5*rowid+colid+5]=(1/Mass[body]);
+}
+void find_Z12(double Zetas[], double Mass[], double Inertia[], int n, int body, double Body_Vectors[])
+{
+	int rowid = n*26;
+	int colid = body*26+z12;
+	int inertiaid = body*3;
+	int Vectorid1 = body*6+3;
+	int Vectorid2 = body*6;
+	Zetas[colid] = 1/Inertia[inertiaid];
+	Zetas[colid +1]=0;
+	Zetas[colid +2]=0;
+	Zetas[colid +3]=0;
+	Zetas[colid +4]=-Body_Vectors[Vectorid1+2]/Inertia[inertiaid];
+	Zetas[colid+5]=Body_Vectors[Vectorid1+1]/Inertia[inertiaid];
+	Zetas[rowid+colid]=0;
+	Zetas[rowid+colid+1]=1/Inertia[inertiaid+1];
+	Zetas[rowid+colid+2]=0;
+	Zetas[rowid+colid+3]=Body_Vectors[Vectorid1+2]/Inertia[inertiaid+1];
+	Zetas[rowid+colid+4]=0;
+	Zetas[rowid+colid+5]=-Body_Vectors[Vectorid1]/Inertia[inertiaid+1];
+	Zetas[2*rowid+colid]=0;
+	Zetas[2*rowid+colid+1]=0;
+	Zetas[2*rowid+colid+2]=1/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+3]=-Body_Vectors[Vectorid1+1]/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+4]=Body_Vectors[Vectorid1]/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+5]=0;
+	Zetas[3*rowid+colid]=0;
+	Zetas[3*rowid+colid+1]=Body_Vectors[Vectorid2+2]/Inertia[inertiaid+1];
+	Zetas[3*rowid+colid+2]=-Body_Vectors[Vectorid2+1]/Inertia[inertiaid+2];
+	Zetas[3*rowid+colid+3]=(1/Mass[body])+((Body_Vectors[Vectorid1+2]*Body_Vectors[Vectorid2+2])/Inertia[inertiaid+1])+((Body_Vectors[Vectorid1+1]*Body_Vectors[Vectorid2+1])/Inertia[inertiaid+2]);
+	Zetas[3*rowid+colid+4]=-(Body_Vectors[Vectorid1]*Body_Vectors[Vectorid2+1])/Inertia[inertiaid+2];
+	Zetas[3*rowid+colid+5]=-(Body_Vectors[Vectorid1]*Body_Vectors[Vectorid2+2])/Inertia[inertiaid+1];
+	Zetas[4*rowid+colid]=-Body_Vectors[Vectorid2+2]/Inertia[inertiaid];
+	Zetas[4*rowid+colid+1]=0;
+	Zetas[4*rowid+colid+2]=Body_Vectors[Vectorid2]/Inertia[inertiaid+2];
+	Zetas[4*rowid+colid+3]=-(Body_Vectors[Vectorid2]*Body_Vectors[Vectorid1+1])/Inertia[inertiaid+2];
+	Zetas[4*rowid+colid+4]=(1/Mass[body])+((Body_Vectors[Vectorid1+2]*Body_Vectors[Vectorid2+2])/Inertia[inertiaid])+((Body_Vectors[Vectorid1]*Body_Vectors[Vectorid2])/Inertia[inertiaid+2]);
+	Zetas[4*rowid+colid+5]=-(Body_Vectors[Vectorid1+1]*Body_Vectors[Vectorid2+2])/Inertia[inertiaid];
+	Zetas[5*rowid+colid]= Body_Vectors[Vectorid2+1]/Inertia[inertiaid];
+	Zetas[5*rowid+colid+1]=-Body_Vectors[Vectorid2]/Inertia[inertiaid+1];
+	Zetas[5*rowid+colid+2]=0;
+	Zetas[5*rowid+colid+3]=-(Body_Vectors[Vectorid2]*Body_Vectors[Vectorid1+2])/Inertia[inertiaid+1];
+	Zetas[5*rowid+colid+4]=-(Body_Vectors[Vectorid2+1]*Body_Vectors[Vectorid1+2])/Inertia[inertiaid];
+	Zetas[5*rowid+colid+5]=(1/Mass[body])+((Body_Vectors[Vectorid1+1]*Body_Vectors[Vectorid2+1])/Inertia[inertiaid])+((Body_Vectors[Vectorid1]*Body_Vectors[Vectorid2])/Inertia[inertiaid+1]);
+}
+void find_Z21(double Zetas[], double Mass[], double Inertia[], int n, int body, double Body_Vectors[])
+{
+	int rowid = n*26;
+	int colid = body*26+z21;
+	int inertiaid = body*3;
+	int Vectorid1 = body*6;
+	int Vectorid2 = body*6+3;
+	Zetas[colid] = 1/Inertia[inertiaid];
+	Zetas[colid +1]=0;
+	Zetas[colid +2]=0;
+	Zetas[colid +3]=0;
+	Zetas[colid +4]=-Body_Vectors[Vectorid1+2]/Inertia[inertiaid];
+	Zetas[colid+5]=Body_Vectors[Vectorid1+1]/Inertia[inertiaid];
+	Zetas[rowid+colid]=0;
+	Zetas[rowid+colid+1]=1/Inertia[inertiaid+1];
+	Zetas[rowid+colid+2]=0;
+	Zetas[rowid+colid+3]=Body_Vectors[Vectorid1+2]/Inertia[inertiaid+1];
+	Zetas[rowid+colid+4]=0;
+	Zetas[rowid+colid+5]=-Body_Vectors[Vectorid1]/Inertia[inertiaid+1];
+	Zetas[2*rowid+colid]=0;
+	Zetas[2*rowid+colid+1]=0;
+	Zetas[2*rowid+colid+2]=1/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+3]=-Body_Vectors[Vectorid1+1]/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+4]=Body_Vectors[Vectorid1]/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+5]=0;
+	Zetas[3*rowid+colid]=0;
+	Zetas[3*rowid+colid+1]=Body_Vectors[Vectorid2+2]/Inertia[inertiaid+1];
+	Zetas[3*rowid+colid+2]=-Body_Vectors[Vectorid2+1]/Inertia[inertiaid+2];
+	Zetas[3*rowid+colid+3]=(1/Mass[body])+((Body_Vectors[Vectorid1+2]*Body_Vectors[Vectorid2+2])/Inertia[inertiaid+1])+((Body_Vectors[Vectorid1+1]*Body_Vectors[Vectorid2+1])/Inertia[inertiaid+2]);
+	Zetas[3*rowid+colid+4]=-(Body_Vectors[Vectorid1]*Body_Vectors[Vectorid2+1])/Inertia[inertiaid+2];
+	Zetas[3*rowid+colid+5]=-(Body_Vectors[Vectorid1]*Body_Vectors[Vectorid2+2])/Inertia[inertiaid+1];
+	Zetas[4*rowid+colid]=-Body_Vectors[Vectorid2+2]/Inertia[inertiaid];
+	Zetas[4*rowid+colid+1]=0;
+	Zetas[4*rowid+colid+2]=Body_Vectors[Vectorid2]/Inertia[inertiaid+2];
+	Zetas[4*rowid+colid+3]=-(Body_Vectors[Vectorid2]*Body_Vectors[Vectorid1+1])/Inertia[inertiaid+2];
+	Zetas[4*rowid+colid+4]=(1/Mass[body])+((Body_Vectors[Vectorid1+2]*Body_Vectors[Vectorid2+2])/Inertia[inertiaid])+((Body_Vectors[Vectorid1]*Body_Vectors[Vectorid2])/Inertia[inertiaid+2]);
+	Zetas[4*rowid+colid+5]=-(Body_Vectors[Vectorid1+1]*Body_Vectors[Vectorid2+2])/Inertia[inertiaid];
+	Zetas[5*rowid+colid]= Body_Vectors[Vectorid2+1]/Inertia[inertiaid];
+	Zetas[5*rowid+colid+1]=-Body_Vectors[Vectorid2]/Inertia[inertiaid+1];
+	Zetas[5*rowid+colid+2]=0;
+	Zetas[5*rowid+colid+3]=-(Body_Vectors[Vectorid2]*Body_Vectors[Vectorid1+2])/Inertia[inertiaid+1];
+	Zetas[5*rowid+colid+4]=-(Body_Vectors[Vectorid2+1]*Body_Vectors[Vectorid1+2])/Inertia[inertiaid];
+	Zetas[5*rowid+colid+5]=(1/Mass[body])+((Body_Vectors[Vectorid1+1]*Body_Vectors[Vectorid2+1])/Inertia[inertiaid])+((Body_Vectors[Vectorid1]*Body_Vectors[Vectorid2])/Inertia[inertiaid+1]);
+}
+void find_Z22(double Zetas[], double Mass[], double Inertia[], int n, int body, double Body_Vectors[])
+{
+	int rowid = n*26;
+	int colid = body*26+z22;
+	int inertiaid = body*3;
+	int Vectorid = body*6+3;
+	Zetas[colid] = 1/Inertia[inertiaid];
+	Zetas[colid +1]=0;
+	Zetas[colid +2]=0;
+	Zetas[colid +3]=0;
+	Zetas[colid +4]=-Body_Vectors[Vectorid+2]/Inertia[inertiaid];
+	Zetas[colid+5]=Body_Vectors[Vectorid+1]/Inertia[inertiaid];
+	Zetas[rowid+colid]=0;
+	Zetas[rowid+colid+1]=1/Inertia[inertiaid+1];
+	Zetas[rowid+colid+2]=0;
+	Zetas[rowid+colid+3]=Body_Vectors[Vectorid+2]/Inertia[inertiaid+1];
+	Zetas[rowid+colid+4]=0;
+	Zetas[rowid+colid+5]=-Body_Vectors[Vectorid]/Inertia[inertiaid+1];
+	Zetas[2*rowid+colid]=0;
+	Zetas[2*rowid+colid+1]=0;
+	Zetas[2*rowid+colid+2]=1/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+3]=-Body_Vectors[Vectorid+1]/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+4]=Body_Vectors[Vectorid]/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+5]=0;
+	Zetas[3*rowid+colid]=0;
+	Zetas[3*rowid+colid+1]=Body_Vectors[Vectorid+2]/Inertia[inertiaid+1];
+	Zetas[3*rowid+colid+2]=-Body_Vectors[Vectorid+1]/Inertia[inertiaid+2];
+	Zetas[3*rowid+colid+3]=(1/Mass[body])+((Body_Vectors[Vectorid+2]*Body_Vectors[Vectorid+2])/Inertia[inertiaid+1])+((Body_Vectors[Vectorid+1]*Body_Vectors[Vectorid+1])/Inertia[inertiaid+2]);
+	Zetas[3*rowid+colid+4]=-(Body_Vectors[Vectorid]*Body_Vectors[Vectorid+1])/Inertia[inertiaid+2];
+	Zetas[3*rowid+colid+5]=-(Body_Vectors[Vectorid]*Body_Vectors[Vectorid+2])/Inertia[inertiaid+1];
+	Zetas[4*rowid+colid]=-Body_Vectors[Vectorid+2]/Inertia[inertiaid];
+	Zetas[4*rowid+colid+1]=0;
+	Zetas[4*rowid+colid+2]=Body_Vectors[Vectorid]/Inertia[inertiaid+2];
+	Zetas[4*rowid+colid+3]=-(Body_Vectors[Vectorid]*Body_Vectors[Vectorid+1])/Inertia[inertiaid+2];
+	Zetas[4*rowid+colid+4]=(1/Mass[body])+((Body_Vectors[Vectorid+2]*Body_Vectors[Vectorid+2])/Inertia[inertiaid])+((Body_Vectors[Vectorid]*Body_Vectors[Vectorid])/Inertia[inertiaid+2]);
+	Zetas[4*rowid+colid+5]=-(Body_Vectors[Vectorid+1]*Body_Vectors[Vectorid+2])/Inertia[inertiaid];
+	Zetas[5*rowid+colid]= Body_Vectors[Vectorid+1]/Inertia[inertiaid];
+	Zetas[5*rowid+colid+1]=-Body_Vectors[Vectorid]/Inertia[inertiaid+1];
+	Zetas[5*rowid+colid+2]=0;
+	Zetas[5*rowid+colid+3]=-(Body_Vectors[Vectorid]*Body_Vectors[Vectorid+2])/Inertia[inertiaid+1];
+	Zetas[5*rowid+colid+4]=-(Body_Vectors[Vectorid+1]*Body_Vectors[Vectorid+2])/Inertia[inertiaid];
+	Zetas[5*rowid+colid+5]=(1/Mass[body])+((Body_Vectors[Vectorid+1]*Body_Vectors[Vectorid+1])/Inertia[inertiaid])+((Body_Vectors[Vectorid]*Body_Vectors[Vectorid])/Inertia[inertiaid+1]);
+}
+void find_partZ21(double Mat[6][6], double Zetas[], int n, int body)
+{
+	int rowid = n*26;
+	int colid = body*26+z13;
+	for(int row =0; row<6; row++)
+	{
+		for(int col=0; col<6; col++)
+		{
+			Zetas[row*rowid+colid+col]=Mat[row][col];
+		}
+	}
+}
+
+		
+void find_partZ13(double Zetas[], double Mass[], double Inertia[], int n, int body, double Body_Vectors[])
+{
+	int rowid = n*26;
+	int colid = body*26+z13;
+	int inertiaid = body*3;
+	int Vectorid = body*6;
+	Zetas[colid] = 1/Inertia[inertiaid];
+	Zetas[colid +1]=0;
+	Zetas[colid +2]=0;
+	Zetas[colid +3]=0;
+	Zetas[colid +4]=0;
+	Zetas[colid+5]=0;
+	Zetas[rowid+colid]=0;
+	Zetas[rowid+colid+1]=1/Inertia[inertiaid+1];
+	Zetas[rowid+colid+2]=0;
+	Zetas[rowid+colid+3]=0;
+	Zetas[rowid+colid+4]=0;
+	Zetas[rowid+colid+5]=0;
+	Zetas[2*rowid+colid]=0;
+	Zetas[2*rowid+colid+1]=0;
+	Zetas[2*rowid+colid+2]=1/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+3]=-0;
+	Zetas[2*rowid+colid+4]=0;
+	Zetas[2*rowid+colid+5]=0;
+	Zetas[3*rowid+colid]=0;
+	Zetas[3*rowid+colid+1]=0;
+	Zetas[3*rowid+colid+2]=0;
+	Zetas[3*rowid+colid+3]=(1/Mass[body]);
+	Zetas[3*rowid+colid+4]=0;
+	Zetas[3*rowid+colid+5]=0;
+	Zetas[4*rowid+colid]=0;
+	Zetas[4*rowid+colid+1]=0;
+	Zetas[4*rowid+colid+2]=0;
+	Zetas[4*rowid+colid+3]=0;
+	Zetas[4*rowid+colid+4]=(1/Mass[body]);
+	Zetas[4*rowid+colid+5]=0;
+	Zetas[5*rowid+colid]= 0;
+	Zetas[5*rowid+colid+1]=0;
+	Zetas[5*rowid+colid+2]=0;
+	Zetas[5*rowid+colid+3]=0;
+	Zetas[5*rowid+colid+4]=0;
+	Zetas[5*rowid+colid+5]=(1/Mass[body]);
+}		
+void find_partZ11(double Zetas[], double Mass[], double Inertia[], int n, int body, double Body_Vectors[])
+{
+	int rowid = n*26;
+	int colid = body*26+z11;
+	int inertiaid = body*3;
+	int Vectorid = body*6;
+	Zetas[colid] = 1/Inertia[inertiaid];
+	Zetas[colid +1]=0;
+	Zetas[colid +2]=0;
+	Zetas[colid +3]=0;
+	Zetas[colid +4]=0;
+	Zetas[colid+5]=0;
+	Zetas[rowid+colid]=0;
+	Zetas[rowid+colid+1]=1/Inertia[inertiaid+1];
+	Zetas[rowid+colid+2]=0;
+	Zetas[rowid+colid+3]=0;
+	Zetas[rowid+colid+4]=0;
+	Zetas[rowid+colid+5]=0;
+	Zetas[2*rowid+colid]=0;
+	Zetas[2*rowid+colid+1]=0;
+	Zetas[2*rowid+colid+2]=1/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+3]=-0;
+	Zetas[2*rowid+colid+4]=0;
+	Zetas[2*rowid+colid+5]=0;
+	Zetas[3*rowid+colid]=0;
+	Zetas[3*rowid+colid+1]=0;
+	Zetas[3*rowid+colid+2]=0;
+	Zetas[3*rowid+colid+3]=(1/Mass[body]);
+	Zetas[3*rowid+colid+4]=0;
+	Zetas[3*rowid+colid+5]=0;
+	Zetas[4*rowid+colid]=0;
+	Zetas[4*rowid+colid+1]=0;
+	Zetas[4*rowid+colid+2]=0;
+	Zetas[4*rowid+colid+3]=0;
+	Zetas[4*rowid+colid+4]=(1/Mass[body]);
+	Zetas[4*rowid+colid+5]=0;
+	Zetas[5*rowid+colid]= 0;
+	Zetas[5*rowid+colid+1]=0;
+	Zetas[5*rowid+colid+2]=0;
+	Zetas[5*rowid+colid+3]=0;
+	Zetas[5*rowid+colid+4]=0;
+	Zetas[5*rowid+colid+5]=(1/Mass[body]);
+}
+void find_Z13(double Zetas[], double Mass[], double Inertia[], int n, int body, double Body_Vectors[])
+{
+	
+	int rowid = n*26;
+	int colid = body*26+z13;
+	int inertiaid = body*3;
+	int Vectorid = body*6;
+	Zetas[colid] = 1/Inertia[inertiaid];
+	Zetas[colid +1]=0;
+	Zetas[colid +2]=0;
+	Zetas[colid +3]=0;
+	Zetas[colid +4]=0;
+	Zetas[colid+5]=0;
+	Zetas[rowid+colid]=0;
+	Zetas[rowid+colid+1]=1/Inertia[inertiaid+1];
+	Zetas[rowid+colid+2]=0;
+	Zetas[rowid+colid+3]=0;
+	Zetas[rowid+colid+4]=0;
+	Zetas[rowid+colid+5]=0;
+	Zetas[2*rowid+colid]=0;
+	Zetas[2*rowid+colid+1]=0;
+	Zetas[2*rowid+colid+2]=1/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+3]=-0;
+	Zetas[2*rowid+colid+4]=0;
+	Zetas[2*rowid+colid+5]=0;
+	Zetas[3*rowid+colid]=0;
+	Zetas[3*rowid+colid+1]=Body_Vectors[Vectorid+2]/Inertia[inertiaid+1];
+	Zetas[3*rowid+colid+2]=-Body_Vectors[Vectorid+1]/Inertia[inertiaid+2];
+	Zetas[3*rowid+colid+3]=(1/Mass[body]);
+	Zetas[3*rowid+colid+4]=0;
+	Zetas[3*rowid+colid+5]=0;
+	Zetas[4*rowid+colid]=-Body_Vectors[Vectorid+2]/Inertia[inertiaid];
+	Zetas[4*rowid+colid+1]=0;
+	Zetas[4*rowid+colid+2]=Body_Vectors[Vectorid]/Inertia[inertiaid+2];
+	Zetas[4*rowid+colid+3]=0;
+	Zetas[4*rowid+colid+4]=(1/Mass[body]);
+	Zetas[4*rowid+colid+5]=0;
+	Zetas[5*rowid+colid]= Body_Vectors[Vectorid+1]/Inertia[inertiaid];
+	Zetas[5*rowid+colid+1]=-Body_Vectors[Vectorid]/Inertia[inertiaid+1];
+	Zetas[5*rowid+colid+2]=0;
+	Zetas[5*rowid+colid+3]=0;
+	Zetas[5*rowid+colid+4]=0;
+	Zetas[5*rowid+colid+5]=(1/Mass[body]);
+}
+void find_Z11(double Zetas[], double Mass[], double Inertia[], int n, int body, double Body_Vectors[])
+{
+	int rowid = n*26;
+	int colid = body*26;
+	int inertiaid = body*3;
+	int Vectorid = body*6;
+	Zetas[colid] = 1/Inertia[inertiaid];
+	Zetas[colid +1]=0;
+	Zetas[colid +2]=0;
+	Zetas[colid +3]=0;
+	Zetas[colid +4]=-Body_Vectors[Vectorid+2]/Inertia[inertiaid];
+	Zetas[colid+5]=Body_Vectors[Vectorid+1]/Inertia[inertiaid];
+	Zetas[rowid+colid]=0;
+	Zetas[rowid+colid+1]=1/Inertia[inertiaid+1];
+	Zetas[rowid+colid+2]=0;
+	Zetas[rowid+colid+3]=Body_Vectors[Vectorid+2]/Inertia[inertiaid+1];
+	Zetas[rowid+colid+4]=0;
+	Zetas[rowid+colid+5]=-Body_Vectors[Vectorid]/Inertia[inertiaid+1];
+	Zetas[2*rowid+colid]=0;
+	Zetas[2*rowid+colid+1]=0;
+	Zetas[2*rowid+colid+2]=1/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+3]=-Body_Vectors[Vectorid+1]/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+4]=Body_Vectors[Vectorid]/Inertia[inertiaid+2];
+	Zetas[2*rowid+colid+5]=0;
+	Zetas[3*rowid+colid]=0;
+	Zetas[3*rowid+colid+1]=Body_Vectors[Vectorid+2]/Inertia[inertiaid+1];
+	Zetas[3*rowid+colid+2]=-Body_Vectors[Vectorid+1]/Inertia[inertiaid+2];
+	Zetas[3*rowid+colid+3]=(1/Mass[body])+((Body_Vectors[Vectorid+2]*Body_Vectors[Vectorid+2])/Inertia[inertiaid+1])+((Body_Vectors[Vectorid+1]*Body_Vectors[Vectorid+1])/Inertia[inertiaid+2]);
+	Zetas[3*rowid+colid+4]=-(Body_Vectors[Vectorid]*Body_Vectors[Vectorid+1])/Inertia[inertiaid+2];
+	Zetas[3*rowid+colid+5]=-(Body_Vectors[Vectorid]*Body_Vectors[Vectorid+2])/Inertia[inertiaid+1];
+	Zetas[4*rowid+colid]=-Body_Vectors[Vectorid+2]/Inertia[inertiaid];
+	Zetas[4*rowid+colid+1]=0;
+	Zetas[4*rowid+colid+2]=Body_Vectors[Vectorid]/Inertia[inertiaid+2];
+	Zetas[4*rowid+colid+3]=	-(Body_Vectors[Vectorid]*Body_Vectors[Vectorid+1])/Inertia[inertiaid+2];
+	Zetas[4*rowid+colid+4]=(1/Mass[body])+((Body_Vectors[Vectorid+2]*Body_Vectors[Vectorid+2])/Inertia[inertiaid])+((Body_Vectors[Vectorid]*Body_Vectors[Vectorid])/Inertia[inertiaid+2]);
+	Zetas[4*rowid+colid+5]=-(Body_Vectors[Vectorid+1]*Body_Vectors[Vectorid+2])/Inertia[inertiaid];
+	Zetas[5*rowid+colid]= Body_Vectors[Vectorid+1]/Inertia[inertiaid];
+	Zetas[5*rowid+colid+1]=-Body_Vectors[Vectorid]/Inertia[inertiaid+1];
+	Zetas[5*rowid+colid+2]=0;
+	Zetas[5*rowid+colid+3]=-(Body_Vectors[Vectorid]*Body_Vectors[Vectorid+2])/Inertia[inertiaid+1];
+	Zetas[5*rowid+colid+4]=-(Body_Vectors[Vectorid+1]*Body_Vectors[Vectorid+2])/Inertia[inertiaid];
+	Zetas[5*rowid+colid+5]=(1/Mass[body])+((Body_Vectors[Vectorid+1]*Body_Vectors[Vectorid+1])/Inertia[inertiaid])+((Body_Vectors[Vectorid]*Body_Vectors[Vectorid])/Inertia[inertiaid+1]);
+}
+

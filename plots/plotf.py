@@ -10,11 +10,11 @@ class Body:
 
 
 
-with open('4kcudaDCA1.mtx') as file:
+with open('4kcudadcalab2.mtx') as file:
     cuda = [[float(digit) for digit in line.split()] for line in file]
-with open('numbodsomphyb4k.mtx') as file:
+with open('numbods4klab2.mtx') as file:
     YY = [[float(digit) for digit in line.split()] for line in file]
-with open('graphomphyb4k.mtx') as file:
+with open('ompdcalab2.mtx') as file:
     omp = [[float(digit) for digit in line.split()] for line in file]
 
 
@@ -30,7 +30,7 @@ plt.plot(numbods[0,:],CUDA[0,:],numbods[0,:],CUDA[1,:],numbods[0,:],CUDA[2,:],nu
 #plt.plot(numbods[0,:],OMP[0,:],numbods[0,:],OMP[1,:],numbods[0,:],OMP[2,:],numbods[0,:],OMP[3,:])
 plt.ylabel("Time [ms]")
 plt.xlabel("number of bodies")
-plt.title("Time to Solve Using DCA: CUDA and openMP Comparison using 8 x 2.7Ghz CPUs")
+plt.title("Time to Solve Using DCA: CUDA and openMP Comparison using lab machine")
 plt.legend(['Single CPU', '1 lvl on gpu','3 lvl on gpu','6 lvl on gpu','8 Core openMP','1 lvl on gpu w/ omp','3 lvl on gpu w/ omp','6 lvl on gpu w/ omp'],'best')
 plt.show()
 
