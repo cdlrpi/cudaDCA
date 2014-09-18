@@ -1,5 +1,5 @@
 # Build tools
-NVCC = /usr/local/cuda-5.5/bin/nvcc
+NVCC = /usr/local/cuda-6.5/bin/nvcc
 CXX = g++
 
 # here are all the objects
