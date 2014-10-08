@@ -29,14 +29,16 @@
 #define nz23 25
 //Function Prototypes
 //	Function found in RK45.cu
-void RK_45(double state[], double step, int n, double m[], double l[], double II[],double Y[],int cut_off, double Zs[], float times[], int reps);
 void Initialize(double Mass[],double Inertia[], double Zetas[], int n, bool Active_DOF[], double Body_Placement[],double Body_Vectors[],int dof_index[]);
 void init_2d_pend(bool Active_DOF[],double Body_Vectors[], double Mass[], double Inertia[],int n, double Body_Placement[], double speeds[]);
 void printZeta(double[],int,int,int,int);
-
+void update(double Mass[], double Inertia[], double Init_Zetas[], double Zetas[], int n, double Body_Vectors[], double Speeds[], double DCMs[]);
+void kinematics(bool Active_DOF[], double Coords[], double DCMs[], double speeds[], double omegas[], int dof_index[],int n);
+void RK_45(double step, int n,bool Active_DOF[],double Coords[], double Speeds[], double initZetas[],double Mass[], double Inertia[],int DOF, double Y[], double Ydot[], int dof_index[], int cut_off, double Body_Vectors[]);
 //Main function
 int main()
 {
+	int cut_off=0;
 	int	n=2;
 	int DOF=0;
 	std::ofstream output;
@@ -64,7 +66,9 @@ int main()
 	
 	double *Coords = new double[DOF];
 	double *Speeds = new double[DOF];
-	double *initZetas = new double[n*180];
+	double *initZetas = new double[n*36*6];
+
+	
 	for(int i =0, j=0; i<n*6; i++)
 	{
 		if(Active_DOF[i])
@@ -76,24 +80,62 @@ int main()
 	}
 	
 	Initialize(Mass, Inertia, initZetas, n, Active_DOF, Body_Placement,Body_Vectors,dof_index);
-	printZeta(initZetas,n,0,30,z11);
-			
+	//printZeta(initZetas,n,0,36,z11);
+	//double *DCMs = new double[n*3*3];
+	//double *omegas= new double[n*3];
+	//kinematics(Active_DOF, Coords, DCMs, Speeds, omegas, dof_index, n);
+	//update(Mass, Inertia, initZetas, Zetas, n, Body_Vectors, omegas, DCMs);
+		
 	//Time Setup
 	double tstep= 0.001; //Length of a timestep [s]
-	double tfinal = 0.001; //Final time [s]
+	double tfinal = 0.005; //Final time [s]
 	int tlen = (int) floor(tfinal/tstep)+1;	//Number of timesteps
 
+	double *Y = new double[DOF];
+	double *Ydot = new double[DOF];
+	for(int t=1; t<tlen; t++)	//Loop through every timestep
+	{
+		RK_45(tstep,n,Active_DOF,Coords,Speeds,initZetas,Mass, Inertia,DOF,Y,Ydot,dof_index,cut_off,Body_Vectors);	//Find the solution at that timestep
+
+		for(int i = 0; i<DOF;i++)	//Loop through the solution
+		{
+			Coords[i]=Y[i];
+			Speeds[i]=Ydot[i];
+		}
+	}
+
+	delete[] Body_Placement; 
+	delete[] Body_Speeds;
+	delete[] Mass;
+	delete[] Inertia; 
+	delete[] Active_DOF;
+	delete[] Body_Vectors;
+	delete[] dof_index;
+	delete[] Y;
+	delete[] Ydot;
+	delete[] Coords;
+	delete[] Speeds;
+	delete[] initZetas;
+
 	return EXIT_SUCCESS;	//Program completed successfully
-}	
+}
+
+
+
+	
 void init_2d_pend(bool Active_DOF[],double Body_Vectors[], double Mass[], double Inertia[],int n, double Body_Placement[], double speeds[])
 {
 	double m =1;
-	double r = 0.05;
+	//double r = 0.05;
 	double l =1;
+/*
 	double I1 = .5*m*r*r;
 	double I2 = (m/12)*((3*r*r)+(l*l));
 	double I3 = I2;
-
+*/
+	double I1 = (m/12);
+	double I2 = (m/12);
+	double I3 = (m/12); 
 	 
 	for(int i =0; i<6*n; i++)
 	{
@@ -124,7 +166,7 @@ void printZeta(double Zetas[],int n, int body,int len,int zeta)
 	{
 		for(int c =0; c<6; c++)
 		{
-			std::cout<<Zetas[body*len+zeta+c+r*n*len]<<'\t';	
+			std::cout<<Zetas[r*n*len+body*len+zeta+c]<<'\t';	
 		}
 		std::cout<<std::endl;
 	}
