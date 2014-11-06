@@ -35,6 +35,7 @@ void get_X(double z1[6][6], double z2 [6][6], double D[6][6])
     Mat66Mult(z1,D,z1);	//Perform z1*D and store the solution in z1
 	//z1 now holds (b1.z22+b2.z11)*D
 
+
     set_Dt(D);	//put the transpose of the D matrix in D
     Mat66Mult(D,z1,D); //Perform D*z1 and store the solution in D
 	//D now holds Dt*(b1.z22+b2.z11)*D=X	

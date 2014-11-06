@@ -11,7 +11,7 @@ void Mat61Mult(double A[6][6], double B[6][6], double C[6][6]);
 void get_X(double z1[6][6], double z2[6][6], double D[6][6]);
 void invert_X(double X[6][6]);
 void make_W(double Xinv[6][6], double D[6][6]); 
-//void printm(double a[6][6]);
+void printm(double a[6][6]);
 //Assemble:
 //	Function used to assemble a list of bodies into a list of bodies that is 
 //	half the size of the original list. To accomplish this, the list of old bodies
@@ -46,10 +46,11 @@ for(int i = 0; i<len-odd; i+=1)
 				z2[r][c]=Zs[c+r*n*26+i*52+19];  //save b1.z22 into z2
 			}
 		}
-
-		get_X(z1,z2,A);//Get the intermediate quantity X and save it in A
-		invert_X(A);//Invert X and put it in A
 		
+		get_X(z1,z2,A);//Get the intermediate quantity X and save it in A
+
+		invert_X(A);//Invert X and put it in A
+
 		for(int r = 0; r<5; r++)	//Loop through every row
 		{
 			for(int c=0; c<5; c++)	//Loop through every column

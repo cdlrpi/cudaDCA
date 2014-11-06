@@ -31,7 +31,7 @@ void make_W(double Xinv[6][6], double Ds[], int n, int b, int numbods, int Pinde
 //		num is the number of assembled bodies
 //		odd is equal to 1 if there is an odd number of disassembed bodies and equal to 
 //			0 if there is an even number.	
-void Disassemble(double lessZs[], double lessXs[],double moreZs[], double moreXs[], double oldAs[] ,double newAs[], int num, int odd,double Ds[], int Pindex[],int numbods)
+void Disassemble(double lessZs[], double lessXs[],double moreZs[], double moreXs[], double oldAs[] ,double newAs[], int num, int odd,double Ds[], int Pindex[],int numbods, double PdotUs[])
 {	
 	//Variable Declarations
 	//All variables are temporary variables used to perform matrix operations	
@@ -112,7 +112,7 @@ void Disassemble(double lessZs[], double lessXs[],double moreZs[], double moreXs
 			}		
 		}
 
-    	make_W(A,Ds,n,b,numbods,Pindex);	//Use X inverse to create the intermediate matrix W
+    	make_W(A,Ds,num,i,numbods,Pindex);	//Use X inverse to create the intermediate matrix W
     	//A now holds W
 
     	Mat61Mult(A,temp2,A);	//Perform the operation A*temp2 and store the result in A

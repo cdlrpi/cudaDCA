@@ -20,7 +20,8 @@
 
 //Function Prototypes
 //	Function found in RK45.cu
-void RK_45(double state[], double step, int n, double m[], double l[], double II[],double Y[],int cut_off, double Zs[]);
+//void RK_45(double state[], double step, int n, double m[], double l[], double II[],double Y[],int cut_off, double Zs[]);
+void RK_452(double state[], double step, int n,double m[], double l[], double II[],double Y[],int cut_off, double Zs[]);
 
 //	Functions found in Functs.cu
 void pend_init(double m[], double l[], double II[],int n,double mass, double length);
@@ -50,23 +51,14 @@ int main()
 
 	Initialize(m, l, II, Zs, n);
 	int b =0;
-	for(int j =0; j<6; j++)
-	{
-		for(int k=0; k<6; k++)
-		{
-			printf("%f\t",Zs[k+j*26*n+26*b+0]);
-		}
-		printf("\n");
-	}
-	printf("\n\n");
 
 	/////////////////////////////////////////////////////
-	int cut_off = 50;
+	int cut_off = 0;
 
 
 	//Time Setup
 	double tstep= 0.001; //Length of a timestep [s]
-	double tfinal =2; //Final time [s]
+	double tfinal =0.005; //Final time [s]
 	int tlen = (int) floor(tfinal/tstep)+1;	//Number of timesteps
 
 	//Matrix Output Setup
@@ -86,7 +78,7 @@ int main()
 	
 	//System Initialization
 	horizontal_drop(inits,n);	//Set the initial conditions
-	inits[n]=1;
+	//inits[n]=1;
 	//Save the initial conditions in the solution matrix
 	for(int r=0; r<2*n; r++)
 	{
@@ -94,11 +86,11 @@ int main()
 	}
 
 	//Numerical Integration
-	/*
+	
 	for(int t=1; t<tlen; t++)	//Loop through every timestep
 	{
 		
-		RK_45(inits,tstep,n,m,l,II,Y,cut_off,Zs);	//Find the solution at that timestep
+		RK_452(inits,tstep,n,m,l,II,Y,cut_off,Zs);	//Find the solution at that timestep
 		for(int i = 0; i<2*n;i++)	//Loop through the solution
 		{
 			X[t][i]=Y[i];	//Save the solution at that timestep in the solution matrix
@@ -112,7 +104,7 @@ int main()
 	//Solution Output
 	npy_save_double("mat.npy", fortran_order, 2, shape1, &X[0][0]);	//Output the solution
 	npy_save_double("Vals.npy",fortran_order,2,shape2,&Vals[0][0]);	//Output values to find energy
-	*/
+	
 	//Free memory
 	free(inits);	//Initial conditions
 	free(Y);	//Solution to each timestep

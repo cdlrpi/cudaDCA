@@ -21,5 +21,5 @@ project(go)
 
 find_package(CUDA)
 #cuda_include_directories(/usr/local/cuda/include/cusp)
-cuda_add_executable(go cudaDCAdriver.cu Initialize.cu hybridDCA.cu RK45.cu DCAfuncts.cu Disassemble.cpp solveBCs.cu)
+cuda_add_executable(go cudaDCAdriver.cu Initialize.cu hybridDCA.cu RK45.cu DCAfuncts.cu Disassemble.cpp solveBCs.cu Assemble.cpp)
 

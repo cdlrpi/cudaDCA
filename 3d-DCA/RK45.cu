@@ -48,11 +48,11 @@ void RK_45(double step, int n,bool Active_DOF[],double Coords[], double Speeds[]
 	int i = 0;
 	double h = step/2.0;
 	
-	
 	arycpy(q1,Coords,DOF);
 	arycpy(qdot1,Speeds,DOF);
 	DCAhelp(n,Active_DOF, q1, qdot1,dof_index, initZetas,Mass,Inertia,DOF,Y1,cut_off,Body_Vectors);
-	
+
+
 	set_up(q,qdot1,q2,DOF,h);
 	set_up(qdot,Y1,qdot2,DOF,h);
 	DCAhelp(n,Active_DOF, q2, qdot2,dof_index, initZetas,Mass,Inertia,DOF,Y2,cut_off,Body_Vectors);
@@ -67,6 +67,8 @@ void RK_45(double step, int n,bool Active_DOF[],double Coords[], double Speeds[]
 
 	get_final_q(q,h,qdot1,qdot2,qdot3,qdot4,Y, DOF);
 	get_final_qdot(qdot,h,Y1,Y2,Y3,Y4,Ydot, DOF);
+	
+	std::cout<<Ydot[0]<<'\t'<<Ydot[1]<<std::endl;
 	
 	delete[] q;
 	delete[] qdot;

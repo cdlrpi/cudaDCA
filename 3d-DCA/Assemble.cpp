@@ -48,10 +48,12 @@ void Assemble(double Zs[], double Xs[],double nZs[], double nXs[], int len, int 
 				z2[r][c]=Zs[c+r*n*26+i*52+19];  //save b1.z22 into z2
 			}
 		}
-
-		get_X(z1,z2,Ds,n,active_DOF,i,Pindex,numbods,A);//Get the intermediate quantity X and save it in A
-		invert_X(A);//Invert X and put it in A
 		
+		get_X(z1,z2,Ds,n,active_DOF,i,Pindex,numbods,A);//Get the intermediate quantity X and save it in A
+
+		invert_X(A);//Invert X and put it in A
+
+
 		for(int r = 0; r<5; r++)	//Loop through every row
 		{
 			for(int c=0; c<5; c++)	//Loop through every column
@@ -61,7 +63,7 @@ void Assemble(double Zs[], double Xs[],double nZs[], double nXs[], int len, int 
 			}									//two used to construct X
 		}
 			
-		make_W(A,Ds,n,b,numbods,Pindex);	//Using X inverse, construct the intermediate quantity W and save it in A
+		make_W(A,Ds,n,i,numbods,Pindex);	//Using X inverse, construct the intermediate quantity W and save it in A
 		
 		for(int r =0; r<6; r++)
 		{

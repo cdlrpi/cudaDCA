@@ -33,9 +33,12 @@ void getGenAccel(double Y[], double AF[],double omegas[], bool Active_DOF[], int
 void multPinv(double Ps[], double tempy[], int b, int n);
 void RecDCA(double Zs[], int n, int i, double AF[], int cut_off,double Xs[], double DCMs[], double omegas[], int dof_index[], bool Active_DOF[], double Speeds[],double PdotUs[], double Ds[], int Pindex[],int numbods);
 void Assemble(double Zs[], double Xs[],double nZs[], double nXs[], int len, int odd, int n, double PdotUs[], double Ds[], int Pindex[],int numbods, bool active_DOF[]);
-void Disassemble(double lessZs[], double lessXs[],double moreZs[], double moreXs[], double oldAs[] ,double newAs[], int num, int odd,double Ds[], int Pindex[],int numbods);
+void Disassemble(double lessZs[], double lessXs[],double moreZs[], double moreXs[], double oldAs[] ,double newAs[], int num, int odd,double Ds[], int Pindex[],int numbods, double PdotUs[]);
 void multPinv(double Ps[], double tempy[], int b, int n);
 void Mat61Mult2(double A[6][6], double B[6], double C[6]);
+void printzz(double A[], int n, int b, int zeta);
+
+
 //DCAhelp:
 //	Function that prepares the list of bodies for DCA and finds the final state vector
 //		state is the state of the system at that timestep
@@ -60,10 +63,13 @@ void DCAhelp(int n,bool Active_DOF[],double Coords[], double Speeds[], int dof_i
 	}
 
 	kinematics(Active_DOF, Coords, DCMs, Speeds, omegas, dof_index, n);
-	update(Mass, Inertia, initZetas, Zetas, n, Body_Vectors, omegas, DCMs,Ps,PdotUs,Ds,Active_DOF,Speeds,dof_index);
-	RecDCA(Zetas, n, 0, AF, cut_off,Xs,DCMs,omegas,dof_index,Active_DOF,Speeds,PdotUs,Ds,Pindex,n);
-	getGenAccel(Y,AF,omegas,Active_DOF,n,PdotUs,Ps);
 
+	update(Mass, Inertia, initZetas, Zetas, n, Body_Vectors, omegas, DCMs,Ps,PdotUs,Ds,Active_DOF,Speeds,dof_index);
+
+
+	RecDCA(Zetas, n, 0, AF, cut_off,Xs,DCMs,omegas,dof_index,Active_DOF,Speeds,PdotUs,Ds,Pindex,n);
+
+	getGenAccel(Y,AF,omegas,Active_DOF,n,PdotUs,Ps);
 	//Free memory
 	delete[] Zetas;
 	delete[] Xs;
@@ -76,40 +82,56 @@ void DCAhelp(int n,bool Active_DOF[],double Coords[], double Speeds[], int dof_i
 	delete[] Pindex;
 }
 
-
+void printzz(double A[], int n, int b, int zeta)
+{
+	std::cout<<std::endl;
+	for(int r = 0; r<6; r++)
+	{
+		for(int c =0; c<6; c++)
+		{
+			std::cout<<A[c+zeta+n*26*r+b*26]<<"\t";
+		}
+	std::cout<<std::endl;
+	}
+}
 void getGenAccel(double Y[], double AF[],double omegas[], bool Active_DOF[], int n, double PdotUs[], double Ps[])
 {
 	int c =0;
+	int l =0;
 	//double A1[6];
 	//double A2[6];
 	double tempy[6];
 
 	for(int i =0; i<6; i++)
 	{
-		tempy[i]=AF[i*4]-PdotUs[i];
+		tempy[i]=AF[i*4*n]-PdotUs[i];
 	}
 	multPinv(Ps,tempy,0,n);
+	
+	
 	for(int i =0; i<6; i++)
 	{
 		if(Active_DOF[i])
 		{
-			Y[c]=tempy[i];
+			Y[c]=tempy[c];
 			c++;
 		}
 	}	
 	for(int i =1; i<n; i++)
-	{
+	{ l =0;
 		for(int k =0; k<6; k++)
 		{
-			tempy[k]=AF[i*4+k*4*n+1]-AF[i*4+k*4*n-1]-PdotUs[i*6+k];
+			tempy[k]=AF[i*4+k*4*n-2]-AF[i*4+k*4*n]-PdotUs[i*6+k];
 		}
+
 		multPinv(Ps,tempy,i,n);
 		for(int j=0; j<6; j++)
 		{
 			if(Active_DOF[6*i+j])
 			{
-				Y[c]=tempy[j];
+				Y[c]=tempy[l];
 				c++;
+				l++;
 			}
 		}
 	}
@@ -126,6 +148,7 @@ void multPinv(double Ps[], double tempy[], int b, int n)
 			Pinv[c][r]=Ps[c+b*6+r*6*n];
 		}
 	}
+	
 	Mat61Mult2(Pinv,tempy,tempy);
 }
 	
@@ -188,8 +211,10 @@ void RecDCA(double Zs[], int n, int i, double AF[], int cut_off,double Xs[], dou
 		}
 		else
 		{*/
- 	
+
 			Assemble(Zs,Xs,nZs,nXs, newlen,odd, n,PdotUs,Ds,Pindex,numbods,Active_DOF);	//Assemble the bodies, storing them in newbds
+
+
 		//}
 
 		//Create a list of accelerations and forces of the new bodies.
@@ -208,7 +233,7 @@ void RecDCA(double Zs[], int n, int i, double AF[], int cut_off,double Xs[], dou
 		}
 		else
 		{*/
-		Disassemble(nZs,nXs,Zs,Xs,AFo, AF, newlen,odd,Ds,Pindex,numbods);
+		Disassemble(nZs,nXs,Zs,Xs,AFo, AF, newlen,odd,Ds,Pindex,numbods,PdotUs);
 		//}
 		//Free memory
 		delete[] nZs;

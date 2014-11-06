@@ -78,7 +78,7 @@ int main()
 			j++;
 		}
 	}
-	
+
 	Initialize(Mass, Inertia, initZetas, n, Active_DOF, Body_Placement,Body_Vectors,dof_index);
 	//printZeta(initZetas,n,0,36,z11);
 	//double *DCMs = new double[n*3*3];
@@ -157,6 +157,7 @@ void init_2d_pend(bool Active_DOF[],double Body_Vectors[], double Mass[], double
 		Inertia[i*3+1]=I2;
 		Inertia[i*3+2]=I3;
 	}
+	//Body_Placement[2]=0.3;
 		
 }		
 void printZeta(double Zetas[],int n, int body,int len,int zeta)

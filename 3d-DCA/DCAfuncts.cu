@@ -12,8 +12,11 @@ void Mat61Mult(double A[6][6], double B[6][6], double C[6][6]);
 void makeS(double S[6][6],double r[]);
 void set_D(double D[6][6]);
 void set_Dt(double D[6][6]);
+void get_D2(int Pindex[], int numbods, int b, double D[],double A[6][6]);
 void printm(double A[6][6]);
-
+void rotate_PD(double DCMs[], double D[6][6], int n, int b);
+void rotate_D(double DCMs[], double Ds[], int n, int b);
+void makePdotU(double PdotUs[], int n, int b, double P[6][6],bool active_DOF[], double ws[], double speeds[], int dof_index[]);
 //get_X:
 //	Function used to find the intermediate quantity X for a body
 //	Considering the two bodies used to create X as b1 and b2:
@@ -30,15 +33,17 @@ void get_X(double z1[6][6], double z2 [6][6], double Ds[],int n, bool active_DOF
 		}
 	}
 	//Completing the above loop, z1 now holds b1.z22+b2.z11
-    get_D2(Pindex, numbods, b,A);	//put the D matrix corresponding to a joint in this simulation in D
+    get_D2(Pindex, numbods, b,Ds,A);	//put the D matrix corresponding to a joint in this simulation in D
+
     Mat66Mult(z1,A,z1);	//Perform z1*D and store the solution in z1
 	//z1 now holds (b1.z22+b2.z11)*D
 
     transpose(A);	//put the transpose of the D matrix in D
     Mat66Mult(A,z1,A); //Perform D*z1 and store the solution in D
+
 	//D now holds Dt*(b1.z22+b2.z11)*D=X
 }
-void get_D2(int Pindex[], int numbods, int b, double D[6][6])
+void get_D2(int Pindex[], int numbods, int b, double Ds[],double D[6][6])
 {
 	for(int r =0; r<6; r++)
 	{
@@ -68,7 +73,8 @@ void get_P(double Ps[], double PdotUs[], int n, bool active_DOF[], double DCMs[]
 			c++;			
 		}
 		r++;				
-	}    
+	}
+
 	rotate_PD(DCMs, P, n, b);
 	for(int r =0; r<6; r++)
 	{
@@ -77,7 +83,7 @@ void get_P(double Ps[], double PdotUs[], int n, bool active_DOF[], double DCMs[]
 			Ps[c+b*6+n*r*6]=P[r][c];
 		}
 	}
-	makePdotU(PdotUs,n,b,P,active_DOF,ws,speeds,dof_index)
+	makePdotU(PdotUs,n,b,P,active_DOF,ws,speeds,dof_index);
 }
 
 
@@ -88,10 +94,15 @@ void makePdotU(double PdotUs[], int n, int b, double P[6][6],bool active_DOF[], 
 	int x=0;
 	for(int i =0; i<6; i++)
 	{
+		U[i]=0;
 		if(active_DOF[b*6+i])
 		{
 			U[x]=speeds[dof_index[b]+x];
 			x++;
+		}
+		for(int j =0; j<6; j++)
+		{
+			temp[i][j]=0;
 		}
 	}
 	for(int i =0; i<6; i++)
@@ -116,6 +127,7 @@ void makePdotU(double PdotUs[], int n, int b, double P[6][6],bool active_DOF[], 
 		{
 			PdotUs[b*6+r]+=temp[r][c]*U[c];
 		}
+		//std::cout<<PdotUs[b*6+r];
 	}
 }	
 		
@@ -143,8 +155,10 @@ void get_D(double Ds[],int n, bool active_DOF[], double DCMs[], int b)
 			c++;			
 		}
 		r++;				
-	}    
-	rotate_D(DCMs, Ds[], n, b)
+	} 
+
+	rotate_D(DCMs, Ds, n, b);
+
 }
 void rotate_D(double DCMs[], double Ds[], int n, int b)
 {
@@ -156,20 +170,23 @@ void rotate_D(double DCMs[], double Ds[], int n, int b)
 			{
 				for(int r2=0; r2<3; r2++)
 				{
-					Ds[r2*n*6+c+b*6]=DCMs[r+b*3+r2*n];
+					Ds[r2*n*6+c+b*6]=DCMs[r+b*3+r2*n*3];
 				}
 				r=3;
 			}	
 		}
-		for(int r3 = 3; r3<6; r3++)
+	}
+	for(int c =0; c<6; c++)
+	{
+		for(int r = 3; r<6; r++)
 		{
-			if(Ds[r3*n*6+c+b*6])
+			if(Ds[r*n*6+c+b*6])
 			{
 				for(int r2=0; r2<3; r2++)
 				{
-					Ds[r2*n*6+c+b*6]=DCMs[r3-3+b*3+r2*n];
+					Ds[(r2+3)*n*6+c+b*6]=DCMs[r2*n*3+b*3+r-3];
 				}
-				r3=6;
+				r=6;
 			}
 		}
 	}
@@ -184,29 +201,54 @@ void rotate_PD(double DCMs[], double D[6][6], int n, int b)
 			{
 				for(int r2=0; r2<3; r2++)
 				{
-					D[r2][c]=DCMs[r+b*3+r2*n];
+					D[r2][c]=DCMs[r+b*3+r2*n*3];
 				}
 				r=3;
 			}	
 		}
-		for(int r3 = 3; r3<6; r3++)
+	}
+	for(int c =0; c<6; c++)
+	{
+		for(int r = 3; r<6; r++)
 		{
-			if(D[r3][c])
+			if(D[r][c])
 			{
 				for(int r2=0; r2<3; r2++)
 				{
-					D[r2][c]=DCMs[r3-3+b*3+r2*n];
+					D[r2+3][c]=DCMs[r-3+b*3+r2*n*3];
 				}
-				r3=6;
+				r=6;
 			}
 		}
 	}
 }
 				
+void matmult61(double A[6][6], double B[6], double C[6])
+{	
+	double j[6];	//Temporary matrix
+
+	for(int r = 0; r<6; r++)	//Loop through every row
+	{
+		j[r]=0;	//Initialize the elements of j to 0
 		
+		//Loop through all of the columns, taking the dot product of the 
+		//row of A and the column of B and storing it in j
+		for(int c = 0; c<6; c++)
+		{
+			j[r]+= (A[r][c]*B[c]);
+		}
+	}
+
+	//Store the solution in C
+	for(int r=0; r<6; r++)
+	{
+		C[r]=j[r];
+	}
+}		
 //set_Dt:
 //	Function used to set the transpose of the matrix that defines the subspace of prohibited motion.
 //		D is the matrix in which the transposed prohibited motion matrix will be stored.  
+/*
 void transpose(double D[6][6])
 {
 	double temp[6][6];
@@ -225,7 +267,7 @@ void transpose(double D[6][6])
 		}
 	}	
 }
-
+*/
 //invert_X:
 //	Function used to invert the X matrix.  This function takes advantage of the nature of this 
 //	2D simulation by only inverting the 2x2 matrix inside of X that will effect the solution.
@@ -235,10 +277,10 @@ void invert_X(double X[6][6])
 {
 	double temp1;
 	double temp2;
-	double eye[6][6];
-	for(int r =0; r<6; r++)
+	double eye[5][5];
+	for(int r =0; r<5; r++)
 	{
-		for(int c =0; c<6; c++)
+		for(int c =0; c<5; c++)
 		{
 			eye[r][c]=0;
 			if(c==r)
@@ -248,20 +290,20 @@ void invert_X(double X[6][6])
 		}
 	}
 	//Variable Declarations
-	for(int r =0; r<6; r++)
+	for(int r =0; r<5; r++)
 	{
 		temp1=X[r][r];
-		for(int c =0; c<6; c++)
+		for(int c =0; c<5; c++)
 		{
 			X[r][c]=X[r][c]/temp1;
 			eye[r][c]=eye[r][c]/temp1;
 		}
-		for(int i=0; i<6; i++)
+		for(int i=0; i<5; i++)
 		{
 			if(i!=r)
 			{
 				temp2=X[i][r];
-				for(int c =0; c<6; c++)
+				for(int c =0; c<5; c++)
 				{
 					X[i][c]-=(X[r][c]*temp2);
 					eye[i][c]-=(eye[r][c]*temp2);
@@ -269,9 +311,9 @@ void invert_X(double X[6][6])
 			}
 		}
 	}
-	for(int r =0; r<6; r++)
+	for(int r =0; r<5; r++)
 	{
-		for(int c =0; c<6; c++)
+		for(int c =0; c<5; c++)
 		{
 			X[r][c]=eye[r][c];
 		}
@@ -285,13 +327,14 @@ void invert_X(double X[6][6])
 void make_W(double Xinv[6][6], double Ds[], int n, int b, int numbods, int Pindex[])                    
 { 
 	double D[6][6];  
-	get_D2(Pindex, numbods, b,D);
-    Mat66Mult(Xinv,D,Xinv); //Perform Xinv*D and store the solution in Xinv
+	get_D2(Pindex, numbods, b,Ds,D);
+
+    //Perform Xinv*D and store the solution in Xinv
 	//Xinv now holds Xinv*Dt
-	
+	Mat66Mult(D,Xinv,Xinv);
     transpose(D);	//Put the D matrix in D
-    Mat66Mult(D,Xinv,Xinv);	//Perform D*Xinv and store the solution in Xinv
-	//Xinv now holds D*Xinv*Dt=W
+    	//Perform D*Xinv and store the solution in Xinv
+	 Mat66Mult(Xinv,D,Xinv);//Xinv now holds D*Xinv*Dt=W
 }
 
 //zaa:

@@ -40,6 +40,19 @@ void Update_Properties(double bodyZetas[],double nZetas[], int n, double state[]
 //		js is a list of joints
 //		n is the number of bodies
 //		Y is the array where the final velocities and accelerations are stored
+void printzz(double A[], int n , int b, int zeta);
+void printzz(double A[], int n, int b, int zeta)
+{
+	std::cout<<std::endl;
+	for(int r = 0; r<6; r++)
+	{
+		for(int c =0; c<6; c++)
+		{
+			std::cout<<A[c+zeta+n*26*r+b*26]<<"\t";
+		}
+	std::cout<<std::endl;
+	}
+}
 void DCAhelp(double state[], double m[], double l[], double I[],int n, double Y[],int cut_off, double bZs[], float times[], int reps)
 {
 	//Create the list that will hold all acceleration and force values for all bodies
@@ -50,7 +63,12 @@ void DCAhelp(double state[], double m[], double l[], double I[],int n, double Y[
 	
 
 	Update_Properties(bZs,Zs,n,state,m,l,I);
-
+/*
+		for(int r =0; r<6; r++)
+	{
+		std::cout<<Zs[0*26+12+r*26*n]<<std::endl;
+	}
+	std::cout<<std::endl<<std::endl;*/
 	//CudaInitialize(m,l,I, state, n, Zs);	//Initialize the bodies, finding all zeta values
 	
 	//Pass the list of bodies to DCA and return the accelerations 
@@ -59,13 +77,14 @@ void DCAhelp(double state[], double m[], double l[], double I[],int n, double Y[
 	cudaEvent_t endEvent;
 	cudaEventCreate( &beginEvent );
 	cudaEventCreate( &endEvent );
-	for(int i= 0; i<reps; i++)
+	//for(int i= 0; i<reps; i++)
 	{
 		cudaEventRecord( beginEvent, 0 );
 	RecDCA(Zs, n, 0, AF, cut_off,Xs);
+	
 	cudaEventRecord( endEvent, 0 );
 	cudaEventSynchronize( endEvent );
-	cudaEventElapsedTime( &times[i], beginEvent, endEvent );
+	//cudaEventElapsedTime( &times[i], beginEvent, endEvent );
 	}
 	Y[n]=AF[8*n];	//For a pendulum, the fist acceleration value is in A[2][0]
 
@@ -78,7 +97,6 @@ void DCAhelp(double state[], double m[], double l[], double I[],int n, double Y[
 	{
 		Y[i]=state[i+n];	//Save the velocities
 	}
-
 	//Free memory
 	free(AF);
 	free(Zs);
@@ -125,7 +143,7 @@ void RecDCA(double Zs[], int n, int i, double AF[], int cut_off,double Xs[])
 		}
 		double *nZs=(double*)malloc(sizeof(double)*newlen*26*6);
 		double *nXs=(double*) malloc(sizeof(double)*(newlen)*5*5);
-		if(n>cut_off)
+		/*if(n>cut_off)
 		{
 			//std::cout<<'g';
 			//std::cout<<n-cut_off;
@@ -135,12 +153,13 @@ void RecDCA(double Zs[], int n, int i, double AF[], int cut_off,double Xs[])
 			
 		}
 		else
-		{
+		{*/
 		//	std::cout<<"cpu"<<std::endl;
 		
  	
 			Assemble(Zs,Xs,nZs,nXs, newlen,odd, n);	//Assemble the bodies, storing them in newbds
-		}
+			
+		//}
 		//Create a list of accelerations and forces of the new bodies.
 		double *AFo=(double*)malloc(sizeof(double)*6*newlen*4);
 

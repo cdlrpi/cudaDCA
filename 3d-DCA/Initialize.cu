@@ -37,6 +37,7 @@ void get_Force(double Forces[6][2] ,double omegas[] ,double Body_Vectors[], int 
 void get_P(double Ps[], double PdotUs[], int n, bool active_DOF[], double DCMs[], int b,double ws[], double speeds[], int dof_index[]);
 void get_D(double Ds[],int n, bool active_DOF[], double DCMs[], int b);
 void Save_Zx3(double Init_Zetas[], double Zetas[], double Forces[6][2], double Rot1[6][6], double Rot2[6][6], int body, int n, int gravity, double Mass[]);
+void printzz(double A[], int n, int b, int zeta);
 //Initialize:
 //	Function used to find the initial zeta values for every body in the system. n2 is up.
 //		state is an array of the state of the system at that timestep
@@ -96,11 +97,16 @@ void update(double Mass[], double Inertia[], double Init_Zetas[], double Zetas[]
 	for(int body=0; body<n; body++)
 	{
 		get_Rots(Rot1,Rot2,DCMs,body,n);
-		get_Force(Forces,ang_vels,Body_Vectors,1);
-		Rotate(Rot1,Rot2,Zetas,Init_Zetas,body,n,Forces,1,Mass);
+		
 
+		get_Force(Forces,ang_vels,Body_Vectors,body);
+
+	
+		Rotate(Rot1,Rot2,Zetas,Init_Zetas,body,n,Forces,1,Mass);
+		//printzz(Zetas,n,body,0);
 		get_P(Ps,PdotUs, n, active_DOF,DCMs, body,ang_vels, speeds, dof_index);
 		get_D(Ds,n,active_DOF,DCMs,body);
+
 	}
 }
 void kinematics(bool Active_DOF[], double Coords[], double DCMs[], double speeds[], double omegas[], int dof_index[],int n)
@@ -170,10 +176,6 @@ void kinematics(bool Active_DOF[], double Coords[], double DCMs[], double speeds
 		omegas[i*3+1]=w2;
 		omegas[i*3+2]=w3;			
 	}
-	for(int i =0; i<3*3*n;i++)
-	{
-		std::cout<<DCMs[i];
-	}
 }
 //nCb
 void save_DCM(double DCMs[],double temp[3][3],int i,int n)
@@ -201,7 +203,14 @@ void get_Force(double Forces[6][2] ,double omegas[] ,double Body_Vectors[], int 
 	double w1 = omegas[body*3];
 	double w2 = omegas[body*3+1];
 	double w3 = omegas[body*3+2];
-
+	for(int i =0; i<3; i++)
+	{
+		for(int j =0; j<2; j++)
+		{
+			Forces[i][j]=0;
+		}
+	}
+	
 	Forces[3][0]= - w2*(r1*w2 - r2*w1) - w3*(r1*w3 - r3*w1);
 	Forces[4][0]= w1*(r1*w2 - r2*w1) - w3*(r2*w3 - r3*w2);
 	Forces[5][0]= w1*(r1*w3 - r3*w1) + w2*(r2*w3 - r3*w2);
@@ -221,11 +230,13 @@ void get_Rots(double Rot1[6][6], double Rot2[6][6], double DCMs[], int body, int
 	for(int row =0; row<3; row++)
 	{
 		for(int col = 0; col<3; col++)
-		{
+		{	Rot1[row][col]=0;
+			Rot1[row+3][col]=0;
+			Rot1[row][col+3]=0;
 			Rot1[row+3][col+3]=DCMs[row*3*n+col+body*3];
 		}
+		Rot1[row][row]=1;
 	}
-
 	for(int row =0; row<6; row++)
 	{
 		for(int col=0; col<6; col++)
@@ -242,6 +253,7 @@ void Rotate(double Rot1[6][6],double Rot2[6][6], double Zetas[], double Init_Zet
 
 	Mult2(Rot1,	Init_Zetas,temp,body,n, z11);
 	Mult(temp,Rot2,nz11	, body, n , Zetas, 26);
+	
 
 	Mult2(Rot1,Init_Zetas,temp,body,n,z12);
 	Mult(temp,Rot2,nz12,body,n,Zetas,26);
@@ -252,7 +264,7 @@ void Rotate(double Rot1[6][6],double Rot2[6][6], double Zetas[], double Init_Zet
 	Mult2(Rot1,Init_Zetas,temp,body,n,z22);
 	Mult(temp,Rot2,nz22, body,n,Zetas,26);
 	
-	Save_Zx3(Init_Zetas, Zetas, Forces, Rot1, Rot2, body, n, gravity, Mass);	
+	Save_Zx3(Init_Zetas, Zetas, Forces, Rot1, Rot2, body, n, gravity, Mass);
 }
 
 void Save_Zx3(double Init_Zetas[], double Zetas[], double Forces[6][2], double Rot1[6][6], double Rot2[6][6], int body, int n, int gravity, double Mass[])
@@ -263,7 +275,7 @@ void Save_Zx3(double Init_Zetas[], double Zetas[], double Forces[6][2], double R
 	double temp4[6];
 	double grav[6];
 	for(int r =0; r<6; r++)
-	{
+	{	grav[r]=0;
 		if(gravity+3==r)
 		{
 			grav[r]=9.81*Mass[body];
@@ -274,9 +286,10 @@ void Save_Zx3(double Init_Zetas[], double Zetas[], double Forces[6][2], double R
 			temp2[r][c]=0;
 			for(int l=0; l<6; l++)
 			{
-				temp[r][c]+=Init_Zetas[l+body*36+z13+r*n*30]*Rot2[l][c];
-				temp2[r][c]+=Init_Zetas[l+body*36+z23+r*n*30]*Rot2[l][c];
+				temp[r][c]+=Init_Zetas[l+body*36+z13+r*n*36]*Rot2[l][c];
+				temp2[r][c]+=Init_Zetas[l+body*36+z23+r*n*36]*Rot2[l][c];
 			}
+			
 		}
 	}
 	for(int r=0; r<6; r++)
@@ -290,6 +303,7 @@ void Save_Zx3(double Init_Zetas[], double Zetas[], double Forces[6][2], double R
 		}
 		temp3[r]+=Forces[r][0];
 		temp4[r]+=Forces[r][1];
+		//std::cout<<temp3[r];
 	}
 	for(int r =0; r<6; r++)
 	{
@@ -520,7 +534,7 @@ void Mult2(double A[6][6], double B[], double C[6][6], int body, int n, int zeta
 			//takes the dot product of the row and column and stores it in j.
 			for(int l =0; l<6; l++)
 			{	
-				C[r][c]=C[r][c]+(A[r][l]*B[l*30*n+30*body+c+zeta]);
+				C[r][c]=C[r][c]+(A[r][l]*B[l*36*n+36*body+c+zeta]);
 			}
 		}
 	}
