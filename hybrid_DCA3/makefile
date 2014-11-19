@@ -4,7 +4,7 @@
 NVCC = /usr/local/cuda/bin/nvcc
 
 # here are all the objects 
-OBJS = cudaDCAdriver.o funct_bin/DCAfuncts.o funct_bin/Functs.o funct_bin/Assemble.o funct_bin/solveBCs.o funct_bin/Disassemble.o funct_bin/RK45.o funct_bin/npy.o funct_bin/cudaDCA.o h_code/Assemble_setup.o h_code/Disassemble_setup.o h_code/Init_setup.o funct_bin/Initialize.cu funct_bin/updatezetas.cu
+OBJS = cudaDCAdrivertester.o funct_bin/DCAfuncts.o funct_bin/Functs.o funct_bin/Assemble.o funct_bin/solveBCs.o funct_bin/Disassemble.o funct_bin/RK45.o funct_bin/npy.o funct_bin/cudaDCA.o h_code/Assemble_setup.o h_code/Disassemble_setup.o h_code/Init_setup.o funct_bin/Initialize.cu funct_bin/updatezetas.cu
 
 #rule to change .cu into .o
 .cu.o:
