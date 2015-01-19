@@ -39,7 +39,7 @@ int main()
 	//number of bodies.  If reps is set to 5, DCA will be timed 5 times
 	//and the average of the 5 runs is the output.  The output time will
 	//always be the time in ms for a single DCA run.
-	int reps=5;
+	int reps=10;
 	
 
 	int	n=0;
@@ -51,8 +51,8 @@ int main()
 //FILE NAMES
 //numbods is a list of the number of bodies used for each run
 //timedata is a matrix that holds the time it took for each run
-	numbods.open("numbods4k.mtx");
-	timedata.open("4kcudaDCA1.mtx");
+	numbods.open("n-bodies.mtx");
+	timedata.open("time.mtx");
 
 ////////////////////////////////////////////////////////////////
 	int numa;
@@ -75,11 +75,11 @@ int main()
 		}
 		if (xx ==2)
 		{
-			numa = 3;
+			numa = 6;
 		}
 		if(xx ==3)
 		{
-			numa = 6;
+			numa = 13;
 		}
 		
 	n=0;
@@ -91,22 +91,22 @@ int main()
 //curves happen.  You can change the increment however you want to get the point density you need
 //You can also put a "reps =" somthing line in each if statement if you want to take a bigger
 //average of points at first, but don't feel like waiting for larger numbers of bodies.
-	while(n<4000)
+	while(n<4096)
 	{
 		if(n<500)
 		{
 			n+=5;
-			//reps = 20;
+			reps = 20;
 		}
 		else if( n<2000)
 		{
 			n+=20;
-			//reps = 10;
+			reps = 10;
 		}
 		else if(n< 10000)
 		{
 			n+= 100;
-			//reps = 5;
+			reps = 5;
 		}
 		else
 		{
