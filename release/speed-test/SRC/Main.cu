@@ -57,8 +57,8 @@ int main()
 	int numa;
 	std::cout<<"\nStarting Speed Test..."<<std::endl;
 //This loop determines the number of assemblies (numa) to do on the gpu
-//Right now it is set to do 4 runs total, the first run does no assemblies
-//on the gpu, the second does 1 assembly, the third does 3, and the fourth does 6.
+//Right now it is set to do 5 runs total, the first run does no assemblies
+//on the gpu, the second does 1 assembly, the third does 3, the fourth does 6, the fith does all levels on the GPU.
 //You can change these numbers however you want and the code will adapt and only 
 //do as many as is needed (if you ask for 12 assemblies on 2 bodies it will still
 //only assemble once)
@@ -88,7 +88,7 @@ int main()
 		
 	n=0;
 
-//This loop cycles from 0 to the desired maximum number of bodies (in this case 4000)
+//This loop cycles from 0 to the desired maximum number of bodies (in this case 2048)
 //The if statements inside determine how the number of bodies, n , is incremented.
 //This is because you may need points that are closer together for the spots in the graph where 
 //curves happen.  You can change the increment however you want to get the point density you need
@@ -96,24 +96,24 @@ int main()
 //average of points at first, but don't feel like waiting for larger numbers of bodies.
 	while(n<2048)
 	{
-		if(n<500)
+		if(n<512)
 		{
-			n+=5;
+			n+=2;
 			//reps = 20;
 		}
-		else if( n<2000)
+		else if( n<2048)
 		{
-			n+=20;
+			n+=16;
 			//reps = 10;
 		}
-		else if(n< 10000)
+		else if(n<8192)
 		{
-			n+= 100;
+			n+= 64;
 			//reps = 5;
 		}
 		else
 		{
-			n+=10000;
+			n+=512;
 		}
 
 		float *times=(float*)malloc(sizeof(float)*reps);
@@ -199,7 +199,7 @@ free(inits);
 	free(l);
 	free(Y);
 	}
-	std::cout<<"Test "<<xx+1<<" out of 4 complete."<<std::endl;
+	std::cout<<"Test "<<xx+1<<" out of 5 complete."<<std::endl;
 	timedata<<"\n";
 	numbods<<"\n";
 

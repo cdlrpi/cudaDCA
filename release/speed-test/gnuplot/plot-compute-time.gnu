@@ -19,7 +19,7 @@ set key vert
 # set key outside
 set key top left
 # set key at graph 1.005, graph 1.175
-# set key samplen .5
+ set key samplen .5
 # set key width -1
 
 # Set axis scaling
@@ -29,15 +29,15 @@ set autoscale y
 # unset xtic
 # set xtic 2000                          # set xtics automatically
 # set ytic 0.1                          # set xtics automatically
-set xtic auto                          # set xtics automatically
+set xtic 256                          # set xtics automatically
 set ytic auto                          # set ytics automatically
 
 
-set xlabel "Number of Bodies ($N/10^{3}$)"
+set xlabel "Number of Bodies ($n$)"
 set ylabel "Compute Time ($ms$)"
 
-plot    "../data.mat" using ($1/1000):($2) title "All OpenMP" with lines ls 1, \
- 	"../data.mat" using ($1/1000):($3) title "$1$ Level GPU" with lines ls 2, \
- 	"../data.mat" using ($1/1000):($4) title "$3$ Level GPU" with lines ls 3, \
- 	"../data.mat" using ($1/1000):($5) title "$6$ Level GPU" with lines ls 4, \
- 	"../data.mat" using ($1/1000):($6) title "All GPU" with lines ls 5 
+plot    "../data.mat" using 1:2 every 7 title "All OpenMP"    with lines ls 1, \
+ 	"../data.mat" using 1:3 every 7 title "$1$ Level GPU" with lines ls 2, \
+ 	"../data.mat" using 1:4 every 7 title "$3$ Level GPU" with lines ls 3, \
+ 	"../data.mat" using 1:5 every 7 title "$6$ Level GPU" with lines ls 4, \
+ 	"../data.mat" using 1:6 every 7 title "All GPU"       with lines ls 5 
