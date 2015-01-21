@@ -50,8 +50,8 @@ int main()
 //FILE NAMES
 //numbods is a list of the number of bodies used for each run
 //timedata is a matrix that holds the time it took for each run
-	numbods.open("x_axis.mtx");
-	timedata.open("y_axis.mtx");
+	numbods.open("n.mtx");
+	timedata.open("t.mtx");
 
 ////////////////////////////////////////////////////////////////
 	int numa;
@@ -62,7 +62,7 @@ int main()
 //You can change these numbers however you want and the code will adapt and only 
 //do as many as is needed (if you ask for 12 assemblies on 2 bodies it will still
 //only assemble once)
-	for(int xx = 0; xx<4; xx+=1)
+	for(int xx = 0; xx<5; xx+=1)
 	{
 		if(xx ==0)//This should have been a switch statement
 		{
@@ -80,6 +80,11 @@ int main()
 		{
 			numa = 6;
 		}
+		if(xx ==4)
+		{
+			numa = 12;
+			// for 2048 bodies this should be all levels
+		}
 		
 	n=0;
 
@@ -89,7 +94,7 @@ int main()
 //curves happen.  You can change the increment however you want to get the point density you need
 //You can also put a "reps =" somthing line in each if statement if you want to take a bigger
 //average of points at first, but don't feel like waiting for larger numbers of bodies.
-	while(n<4000)
+	while(n<2048)
 	{
 		if(n<500)
 		{
