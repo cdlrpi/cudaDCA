@@ -1,5 +1,5 @@
 # NOTE: thes ize is given in inches. It can also be given in cm.
-set terminal cairolatex pdf size 4,2
+set terminal cairolatex pdf size 3.5,2
 set output "~/Dropbox/Research/Publications/conferences/idetc-2015/cudaDCA/figures/speed.tex"
 
 # Line styles

@@ -86,7 +86,7 @@ int main()
 			// for 2048 bodies this should be all levels
 		}
 		
-	n=0;
+	n=2;
 
 //This loop cycles from 0 to the desired maximum number of bodies (in this case 2048)
 //The if statements inside determine how the number of bodies, n , is incremented.
@@ -98,22 +98,22 @@ int main()
 	{
 		if(n<512)
 		{
-			n+=2;
+			n+=1;
 			//reps = 20;
 		}
 		else if( n<2048)
 		{
-			n+=16;
+			n+=64;
 			//reps = 10;
 		}
 		else if(n<8192)
 		{
-			n+= 64;
+			n+= 512;
 			//reps = 5;
 		}
 		else
 		{
-			n+=512;
+			n+=2048;
 		}
 
 		float *times=(float*)malloc(sizeof(float)*reps);
