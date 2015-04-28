@@ -1,7 +1,7 @@
 .SUFFIXES: .cu .o
 
 # Build tools
-NVCC = /usr/local/cuda-5.5/bin/nvcc
+NVCC = /usr/local/cuda-6.5/bin/nvcc
 
 # here are all the objects 
 OBJS = cudaDCAdriver.o h_code/Disassemble_setup.o h_code/Init_setup.o h_code/Assemble_setup.o h_code/solveBCs.o h_code/cudaDCA.o h_code/RK45.o h_code/npy.o	h_code/Functs.o
