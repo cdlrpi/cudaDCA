@@ -42,4 +42,4 @@ plot    "../data.mat" using 1:2 every 7 title "Serial"        with lines ls 1, \
  	"../data.mat" using 1:4 every 7 title "$1$ Level GPU" with lines ls 3, \
  	"../data.mat" using 1:5 every 7 title "$3$ Level GPU" with lines ls 4, \
  	"../data.mat" using 1:6 every 7 title "$6$ Level GPU" with lines ls 5, \
- 	"../data.mat" using 1:6 every 7 title "All GPU"       with lines ls 6 
+ 	"../data.mat" using 1:7 every 7 title "All GPU"       with lines ls 6 
