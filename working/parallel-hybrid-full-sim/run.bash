@@ -1,7 +1,7 @@
 #!/bin/bash
 cd run-sim
-#make
-#./runSim
+make
+./runSim
 cd ..
 cd serial
 make
