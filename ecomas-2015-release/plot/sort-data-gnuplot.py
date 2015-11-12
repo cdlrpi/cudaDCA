@@ -1,10 +1,10 @@
 import numpy as np
 
-with open('../parallel-hybrid-speed-test/n.mtx') as file:
+with open('../speed-test/parallel-hybrid-speed-test/n.mtx') as file:
     n = np.array([[float(digit) for digit in line.split()] for line in file],dtype=np.float64)
-with open('../parallel-hybrid-speed-test/t.mtx') as file:
+with open('../speed-test/parallel-hybrid-speed-test/t.mtx') as file:
     tp = np.array([[float(digit) for digit in line.split()] for line in file],dtype=np.float64)
-with open('../serial-speed-test/t.mtx') as file:
+with open('../speed-test/serial-speed-test/t.mtx') as file:
     ts = np.array([[float(digit) for digit in line.split()] for line in file],dtype=np.float64)
 
 

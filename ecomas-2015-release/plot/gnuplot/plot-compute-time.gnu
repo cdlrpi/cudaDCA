@@ -1,6 +1,6 @@
 # NOTE: thes ize is given in inches. It can also be given in cm.
-set terminal cairolatex pdf size 5,2.5
-set output "~/Dropbox/Research/Publications/conferences/ecomas-2015/cuda-dca/full-paper/figures/speed.tex"
+set terminal cairolatex pdf size 4.721,2.5
+set output "~/Dropbox/Doctorate Degree/thesis/figures/speed.tex"
 
 # Line styles
 set border linewidth 1
@@ -10,6 +10,7 @@ set style line 3 lt rgb "blue"  lw 3
 set style line 4 lt rgb "green" lw 3
 set style line 5 lt rgb "violet"lw 3
 set style line 6 lt rgb "orange"lw 3
+set style line 7 lt rgb "cyan"  lw 3
 
 # Set new scaling 
 set   autoscale                        # scale axes automatically
@@ -18,9 +19,9 @@ set   autoscale                        # scale axes automatically
 set notitle
 set key vert
 # set key outside
-set key top left
-# set key at graph 1.005, graph 1.175
- set key samplen .5
+# set key top left
+set key at graph .35, graph .9
+set key samplen .5
 # set key width -1
 
 # Set axis scaling
@@ -40,6 +41,7 @@ set ylabel "Compute Time ($ms$)"
 plot    "../data.mat" using 1:2 every 7 title "Serial"        with lines ls 1, \
         "../data.mat" using 1:3 every 7 title "All OpenMP"    with lines ls 2, \
  	"../data.mat" using 1:4 every 7 title "$1$ Level GPU" with lines ls 3, \
- 	"../data.mat" using 1:5 every 7 title "$3$ Level GPU" with lines ls 4, \
- 	"../data.mat" using 1:6 every 7 title "$6$ Level GPU" with lines ls 5, \
- 	"../data.mat" using 1:7 every 7 title "All GPU"       with lines ls 6 
+ 	"../data.mat" using 1:5 every 7 title "$2$ Level GPU" with lines ls 4, \
+ 	"../data.mat" using 1:6 every 7 title "$3$ Level GPU" with lines ls 5, \
+ 	"../data.mat" using 1:7 every 7 title "$6$ Level GPU" with lines ls 6, \
+ 	"../data.mat" using 1:8 every 7 title "All GPU"       with lines ls 7 
