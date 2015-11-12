@@ -62,7 +62,7 @@ int main()
 //You can change these numbers however you want and the code will adapt and only 
 //do as many as is needed (if you ask for 12 assemblies on 2 bodies it will still
 //only assemble once)
-	for(int xx = 0; xx<6; xx+=1)
+	for(int xx = 0; xx<5; xx+=1)
 	{
 		if(xx ==0)//This should have been a switch statement
 		{
@@ -74,17 +74,13 @@ int main()
 		}
 		if (xx ==2)
 		{
-			numa = 2;
-		}
-		if (xx ==3)
-		{
 			numa = 3;
 		}
-		if(xx ==4)
+		if(xx ==3)
 		{
 			numa = 6;
 		}
-		if(xx ==5)
+		if(xx ==4)
 		{
 			numa = 12;
 			// for 2048 bodies this should be all levels
