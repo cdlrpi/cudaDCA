@@ -1,0 +1,46 @@
+make: *** No targets specified and no makefile found.  Stop.
+./run.bash: line 4: ./runSim: No such file or directory
+/usr/local/cuda/bin/nvcc  -c SRC/Main.cu -o SRC/Main.o
+SRC/Main.cu(60): warning: variable "tfinal" was declared but never referenced
+
+SRC/Main.cu(62): warning: variable "flag" was declared but never referenced
+
+SRC/Main.cu(64): warning: variable "percent" was declared but never referenced
+
+SRC/Main.cu(65): warning: variable "tlen" was declared but never referenced
+
+SRC/Main.cu(66): warning: variable "percheck" was declared but never referenced
+
+SRC/Main.cu(67): warning: variable "tstep" was declared but never referenced
+
+SRC/Main.cu(68): warning: variable "c" was declared but never referenced
+
+SRC/Main.cu(79): warning: variable "cut_off" was declared but never referenced
+
+SRC/Main.cu(60): warning: variable "tfinal" was declared but never referenced
+
+SRC/Main.cu(62): warning: variable "flag" was declared but never referenced
+
+SRC/Main.cu(64): warning: variable "percent" was declared but never referenced
+
+SRC/Main.cu(65): warning: variable "tlen" was declared but never referenced
+
+SRC/Main.cu(66): warning: variable "percheck" was declared but never referenced
+
+SRC/Main.cu(67): warning: variable "tstep" was declared but never referenced
+
+SRC/Main.cu(68): warning: variable "c" was declared but never referenced
+
+SRC/Main.cu(79): warning: variable "cut_off" was declared but never referenced
+
+/usr/local/cuda/bin/nvcc  -c SRC/DCA_Functions/DCAfuncts.cu -o SRC/DCA_Functions/DCAfuncts.o
+/usr/local/cuda/bin/nvcc  -c SRC/DCA_Functions/Functs.cu -o SRC/DCA_Functions/Functs.o
+/usr/local/cuda/bin/nvcc -Xcompiler -fopenmp -c SRC/DCA_Functions/Assemble.cpp -o SRC/DCA_Functions/Assemble.o
+/usr/local/cuda/bin/nvcc  -c SRC/DCA_Functions/solveBCs.cu -o SRC/DCA_Functions/solveBCs.o
+/usr/local/cuda/bin/nvcc -Xcompiler -fopenmp -c SRC/DCA_Functions/Disassemble.cpp -o SRC/DCA_Functions/Disassemble.o
+/usr/local/cuda/bin/nvcc  -c SRC/DCA_Functions/RK45.cu -o SRC/DCA_Functions/RK45.o
+
+Compilation terminated.
+nvcc error   : 'cudafe++' died due to signal 2 
+makefile:11: recipe for target 'SRC/DCA_Functions/RK45.o' failed
+make: *** [SRC/DCA_Functions/RK45.o] Error 2
