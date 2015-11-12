@@ -95,7 +95,7 @@ int main(int argc, char* argv[])
 //You can change these numbers however you want and the code will adapt and only 
 //do as many as is needed (if you ask for 12 assemblies on 2 bodies it will still
 //only assemble once)
-	for(int xx = 0; xx<4; xx+=1)
+	for(int xx = 0; xx<5; xx+=1)
 	{
 		if(xx ==0)//This should have been a switch statement
 		{
@@ -113,6 +113,10 @@ int main(int argc, char* argv[])
 		{
 			numa = 6;
 		}
+		if(xx ==4)
+		{
+			numa = 12;
+		}
 		
 	n=0;
 	std::cout<<"\n\n\n\n\n"<<numa<<"\n\n\n\n";
@@ -123,21 +127,21 @@ int main(int argc, char* argv[])
 //curves happen.  You can change the increment however you want to get the point density you need
 //You can also put a "reps =" somthing line in each if statement if you want to take a bigger
 //average of points at first, but don't feel like waiting for larger numbers of bodies.
-	while(n<4000)
+	while(n<2048)
 	{
-		if(n<500)
+		if(n<512)
 		{
-			n+=5;
+			n+=1;
 			//reps = 20;
 		}
-		else if( n<2000)
+		else if( n<2048)
 		{
-			n+=20;
+			n+=64;
 			//reps = 10;
 		}
-		else if(n< 10000)
+		else if(n< 8192)
 		{
-			n+= 100;
+			n+= 512;
 			//reps = 5;
 		}
 		else
@@ -147,8 +151,8 @@ int main(int argc, char* argv[])
 
 
 	//Time Setup
-	double tstep= 0.0001; //Length of a timestep [s]
-	double tfinal = 0.25; //Final time [s]
+	double tstep= 0.001; //Length of a timestep [s]
+	double tfinal = 0.20; //Final time [s]
 	int tlen = (int) floor(tfinal/tstep)+1;	//Number of timesteps
 
 
@@ -166,7 +170,7 @@ int main(int argc, char* argv[])
 	
 	//Set maximum output precision
 	std::cout.precision(16);
-
+	std::cout<<"n = "<<n<<std::endl;
 	cudaEvent_t beginEvent;
 	cudaEvent_t endEvent;
 	cudaEventCreate( &beginEvent );
