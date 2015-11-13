@@ -66,95 +66,23 @@ int main(int argc, char* argv[])
 	double percheck = 0.1;	//Number to check progress
 	double tstep=.001;	//Length of a timestep
 	char c;
-	float timeValue;
 
-	//reps is the number of times DCA will repeat itself at the current
-	//number of bodies.  If reps is set to 5, DCA will be timed 5 times
-	//and the average of the 5 runs is the output.  The output time will
-	//always be the time in ms for a single DCA run.
-	int reps=1;
-	
+	//User Input and Display
+	cout<<"\n";	//clear screen
 
-	n=0;
-	int cut_off;
-	float *times=(float*)malloc(sizeof(float)*reps);
-	std::ofstream timedata;
-	std::ofstream numbods;
+	//If there are no arguments, default to outputting an mtx file
+	cout<<"Number of bodies:  ";
+	cin>>n;
+	flag = mtx_file;
 
-//FILE NAMES
-//numbods is a list of the number of bodies used for each run
-//timedata is a matrix that holds the time it took for each run
-	numbods.open("bodiesSerial.mtx");
-	timedata.open("timesSerial.mtx");
+	//Ask user for final time
+	cout<<"\n\n"<<"Final time:\t";
+	cin>>tfinal;
+	tlen = (int) floor(tfinal/tstep)+1;	//length of time matrix
 
-////////////////////////////////////////////////////////////////
-
-//This loop determines the number of assemblies (numa) to do on the gpu
-//Right now it is set to do 4 runs total, the first run does no assemblies
-//on the gpu, the second does 1 assembly, the third does 3, and the fourth does 6.
-//You can change these numbers however you want and the code will adapt and only 
-//do as many as is needed (if you ask for 12 assemblies on 2 bodies it will still
-//only assemble once)
-	for(int xx = 0; xx<1; xx+=1)
-	{
-		if(xx ==0)//This should have been a switch statement
-		{
-			numa = 0;
-		}
-		if(xx == 1)
-		{
-			numa = 1;
-		}
-		if (xx ==2)
-		{
-			numa = 3;
-		}
-		if(xx ==3)
-		{
-			numa = 6;
-		}
-		if(xx ==4)
-		{
-			numa = 12;
-		}
-		
-	n=0;
-	std::cout<<"\n\n\n\n\n"<<numa<<"\n\n\n\n";
-
-//This loop cycles from 0 to the desired maximum number of bodies (in this case 4000)
-//The if statements inside determine how the number of bodies, n , is incremented.
-//This is because you may need points that are closer together for the spots in the graph where 
-//curves happen.  You can change the increment however you want to get the point density you need
-//You can also put a "reps =" somthing line in each if statement if you want to take a bigger
-//average of points at first, but don't feel like waiting for larger numbers of bodies.
-	while(n<2048)
-	{
-		if(n<512)
-		{
-			n+=1;
-			//reps = 20;
-		}
-		else if( n<2048)
-		{
-			n+=64;
-			//reps = 10;
-		}
-		else if(n< 8192)
-		{
-			n+= 512;
-			//reps = 5;
-		}
-		else
-		{
-			n+=10000;
-		}
-
-
-	//Time Setup
-	double tstep= 0.001; //Length of a timestep [s]
-	double tfinal = 0.20; //Final time [s]
-	int tlen = (int) floor(tfinal/tstep)+1;	//Number of timesteps
-
+	//Begin Initializing system and determining number of gpu assemblies
+	cout<<"\n\nDetermining most efficient configuration...\n\n";
+	numa=findCutoff(n,20);	//Find number of gpu assemblies
 
 	//Allocate memory
 	inits = (double*)malloc(sizeof(double)*2*n);	//Initial conditions are length 2*n
@@ -168,27 +96,56 @@ int main(int argc, char* argv[])
 	Initialize(m, l, II, Zs, n); //Initialize the Zeta matrices
 	horizontal_drop(inits,n);	//Set the initial conditions
 	
+	//Ask user to press a key to begin
+	cout<<numa<<" assemblies will be performed on the gpu\n\nPress enter to begin";
+	c=getchar();
+	c=getchar();
+	cout<<"\nNumber of bodies:\t"<<n<<"\nFinal time:\t"<<tfinal<<"\nNumber of assemblies performed on gpu:\t"<<numa<<"\n\n\t\t";
+
+	ofstream myfile;
+	ofstream myfile2;
+	myfile2.open("Body_Values.mtx");
+  	myfile.open ("Solution.mtx");
+	
 	//Set maximum output precision
 	std::cout.precision(16);
-	std::cout<<"n = "<<n<<std::endl;
-	cudaEvent_t beginEvent;
-	cudaEvent_t endEvent;
-	cudaEventCreate( &beginEvent );
-	cudaEventCreate( &endEvent );
+	myfile2<<tstep<<"  ";
 
-	cudaEventRecord( beginEvent, 0 );
+	//Matrix Output Setup
+	for(int i =1; i<n+1; i++)	//Loop through all of the bodies
+	{
+		myfile2<<m[i-1]<<"  ";	//Record the mass of every body
+	}
+	myfile2<<"\n"<<tfinal<<"  ";//Record the final time
+	for(int i =1; i<n+1; i++)	//Loop through all of the bodies
+	{
+		myfile2<<l[i-1]<<"  ";	//Record the length of every body
+	}
+
+	//Save the initial conditions in the solution matrix
+	for(int r=0; r<2*n; r++)
+	{
+		myfile << inits[r]<< "  ";
+	}
+	myfile << "\n";
+
 	for(int t=1; t<tlen; t++)	//Loop through every timestep
 	{
 		RK_45(inits,tstep,n,m,l,II,Y,numa,Zs);	//Find the solution at that timestep
 		for(int i = 0; i<2*n;i++)	//Loop through the solution
 		{
 			inits[i]=Y[i];	//Use the solution as the initial conditions for the next timestep
+			myfile << inits[i]<<"  ";
 		}
-
+		if((((float)t)/((float)tlen))>=percheck)	//Check for progress
+		{
+			cout<<percent<<"%\n\t\t";	//Print progress
+			percheck+=.1;
+			percent+=10;
+		}
+	myfile << "\n";
 	}
-	cudaEventRecord( endEvent, 0 );
-	cudaEventSynchronize( endEvent );
-	cudaEventElapsedTime( &timeValue, beginEvent, endEvent );
+
 	cout<<"100%\n\t\t";
 
 	//Check for errors in integration and complete output
@@ -197,8 +154,12 @@ int main(int argc, char* argv[])
 	 	cout<<"\nAn error occurred during integration, No output generated\n";
 		return 0;
 	}
-	timedata<< timeValue << "  ";
-	numbods<<n<<"  ";
+	else
+	{	
+		myfile.close();
+		myfile2.close();
+		cout<<"\nIntegration successful! Type \"python plot.py\" to plot results\n";
+	}
 	free(inits);	//Initial conditions
 	free(Y);	//Solution to each timestep
 	free(m);
@@ -206,12 +167,5 @@ int main(int argc, char* argv[])
 	free(II);
 	free(Zs);
 
-		}
-	timedata<<"\n";
-	numbods<<"\n";
-	}
-	
-	numbods.close();
-	timedata.close();
 	return EXIT_SUCCESS;	//Program completed successfully
 }
