@@ -84,8 +84,8 @@ int main(int argc, char* argv[])
 //FILE NAMES
 //numbods is a list of the number of bodies used for each run
 //timedata is a matrix that holds the time it took for each run
-	numbods.open("bodiesSerial.mtx");
-	timedata.open("timesSerial.mtx");
+	numbods.open("serialBodies.mtx");
+	timedata.open("serialTimes.mtx");
 
 ////////////////////////////////////////////////////////////////
 

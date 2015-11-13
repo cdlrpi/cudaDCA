@@ -84,8 +84,8 @@ int main(int argc, char* argv[])
 //FILE NAMES
 //numbods is a list of the number of bodies used for each run
 //timedata is a matrix that holds the time it took for each run
-	numbods.open("bodies.mtx");
-	timedata.open("times.mtx");
+	numbods.open("parallelBodies.mtx");
+	timedata.open("parallelTimes.mtx");
 
 ////////////////////////////////////////////////////////////////
 
@@ -177,7 +177,7 @@ int main(int argc, char* argv[])
 	cudaEventCreate( &endEvent );
 
 	cudaEventRecord( beginEvent, 0 );
-	for(int t=1; t<tlen; t++)	//Loop through every timestep
+	for(int t=1; t<2; t++)	//Loop through every timestep
 	{
 		RK_45(inits,tstep,n,m,l,II,Y,numa,Zs);	//Find the solution at that timestep
 		for(int i = 0; i<2*n;i++)	//Loop through the solution

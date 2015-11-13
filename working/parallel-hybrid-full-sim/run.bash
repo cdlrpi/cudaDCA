@@ -1,5 +1,5 @@
 #!/bin/bash
-cd run-sim
+cd parallel
 make
 ./runSim
 cd ..

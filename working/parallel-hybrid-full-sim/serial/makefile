@@ -4,7 +4,7 @@
 NVCC = /usr/local/cuda/bin/nvcc
 
 # here are all the objects 
-OBJS = SRC/Main.o SRC/DCA_Functions/DCAfuncts.o SRC/DCA_Functions/Functs.o SRC/DCA_Functions/Assemble.o SRC/DCA_Functions/solveBCs.o SRC/DCA_Functions/Disassemble.o SRC/DCA_Functions/RK45.o  SRC/DCA_Functions/cudaDCA.o SRC/Host_Code/Assemble_setup.o SRC/Host_Code/Disassemble_setup.o SRC/Host_Code/Init_setup.o SRC/DCA_Functions/Initialize.cu SRC/DCA_Functions/updatezetas.cu SRC/DCA_Functions/findCutoff.cu
+OBJS = SRC/Main.o SRC/DCA_Functions/DCAfuncts.o SRC/DCA_Functions/Functs.o SRC/DCA_Functions/Assemble.o SRC/DCA_Functions/solveBCs.o SRC/DCA_Functions/Disassemble.o SRC/DCA_Functions/RK45.o  SRC/DCA_Functions/hybridDCA.o SRC/Host_Code/Assemble_setup.o SRC/Host_Code/Disassemble_setup.o SRC/Host_Code/Init_setup.o SRC/DCA_Functions/Initialize.cu SRC/DCA_Functions/updatezetas.cu SRC/DCA_Functions/findCutoff.cu
 
 #rule to change .cu into .o
 .cu.o:
