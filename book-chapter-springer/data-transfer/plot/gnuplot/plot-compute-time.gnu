@@ -1,7 +1,7 @@
 # NOTE: thes ize is given in inches. It can also be given in cm.
-set terminal cairolatex pdf size 5,2.5
-set output "~/Dropbox/Doctorate\ Degree/thesis/figures/speedFull.tex"
-
+set terminal cairolatex pdf size 3.7,2.5
+set output "~/Dropbox/Research/Publications/book-chapters/gpu-dca-springer/figures/speedTFR.tex"
+ 
 # Line styles
 set border linewidth 1
 set style line 1 lt rgb "black"	lw 3
@@ -37,9 +37,9 @@ set ytic auto                          # set ytics automatically
 set xlabel "Number of Bodies ($n$)"
 set ylabel "Compute Time ($ms$)"
 
-plot    "../data.mat" using 1:2 every 7 title "Serial"        with lines ls 1, \
-        "../data.mat" using 1:3 every 7 title "All OpenMP"    with lines ls 2, \
- 	"../data.mat" using 1:4 every 7 title "$1$ Level GPU" with lines ls 3, \
- 	"../data.mat" using 1:5 every 7 title "$3$ Level GPU" with lines ls 4, \
- 	"../data.mat" using 1:6 every 7 title "$6$ Level GPU" with lines ls 5, \
- 	"../data.mat" using 1:7 every 7 title "All GPU"       with lines ls 6 
+plot    "../data.mat" using 1:(4*$2) every 7 title "Serial"        with lines ls 1, \
+        "../data.mat" using 1:(4*$3) every 7 title "All OpenMP"    with lines ls 2, \
+ 	"../data.mat" using 1:(4*$4) every 7 title "$1$ Level GPU" with lines ls 3, \
+ 	"../data.mat" using 1:(4*$5) every 7 title "$3$ Level GPU" with lines ls 4, \
+ 	"../data.mat" using 1:(4*$6) every 7 title "$6$ Level GPU" with lines ls 5, \
+ 	"../data.mat" using 1:(4*$7) every 7 title "All GPU"       with lines ls 6 

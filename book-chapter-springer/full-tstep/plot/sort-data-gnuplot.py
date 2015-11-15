@@ -1,10 +1,10 @@
 import numpy as np
 
-with open('../parallel/parallelBodies.mtx') as file:
+with open('../parallel/n.mtx') as file:
     n = np.array([[float(digit) for digit in line.split()] for line in file],dtype=np.float64)
-with open('../parallel/parallelTimes.mtx') as file:
+with open('../parallel/t.mtx') as file:
     tp = np.array([[float(digit) for digit in line.split()] for line in file],dtype=np.float64)
-with open('../serial/serialTimes.mtx') as file:
+with open('../serial/t.mtx') as file:
     ts = np.array([[float(digit) for digit in line.split()] for line in file],dtype=np.float64)
 
 

@@ -1,6 +1,6 @@
 # NOTE: thes ize is given in inches. It can also be given in cm.
 set terminal cairolatex pdf size 5,2.5
-set output "~/Dropbox/Doctorate\ Degree/thesis/figures/speedFull.tex"
+set output "~/Dropbox/Doctorate\ Degree/thesis/figures/speedTrans.tex"
 
 # Line styles
 set border linewidth 1
